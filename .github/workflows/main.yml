@@ -27,7 +27,7 @@ jobs:
     - name: Create credential files from secrets
       run: |
         echo "${{ secrets.GMAIL_CREDENTIALS }}" > credentials.json
-        echo "${{ secrets.GMAIL_TOKEN }}" > token.json
+        echo "${{ secrets.GMAIL_TOKEN }}" | base64 --decode > token.json
 
     # === 새로 추가된 디버깅 단계 ===
     - name: Debug - Print file contents
