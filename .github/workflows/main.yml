@@ -1,12 +1,10 @@
-# .github/workflows/main.yml
+# .github/workflows/main.yml (디버깅 버전)
 
 name: Send Daily Newsletter
 
 on:
   schedule:
-    # Runs at 8 AM KST every day (23:00 UTC)
     - cron: '0 23 * * *'
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
@@ -14,27 +12,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # 2. Sets up a Python environment
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
 
-    # 3. Installs the necessary libraries
     - name: Install dependencies
       run: |
         pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib feedparser beautifulsoup4 Jinja2 lxml
 
-    # 4. Creates the credential files from the secrets you saved
     - name: Create credential files from secrets
       run: |
         echo "${{ secrets.GMAIL_CREDENTIALS }}" > credentials.json
         echo "${{ secrets.GMAIL_TOKEN }}" > token.json
 
-    # 5. Runs the main Python script
+    # === 새로 추가된 디버깅 단계 ===
+    - name: Debug - Print file contents
+      run: |
+        echo "--- Start of token.json content ---"
+        cat token.json
+        echo "--- End of token.json content ---"
+    # ================================
+
     - name: Run script to send email
       run: python news_collector.py
