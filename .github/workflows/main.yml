@@ -27,7 +27,7 @@ jobs:
     # 3. Installs the necessary libraries
     - name: Install dependencies
       run: |
-        pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib feedparser beautifulsoup4 Jinja2
+        pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib feedparser beautifulsoup4 Jinja2 lxml
 
     # 4. Creates the credential files from the secrets you saved
     - name: Create credential files from secrets
