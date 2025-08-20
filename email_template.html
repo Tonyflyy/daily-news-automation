@@ -5,33 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>오늘의 뉴스레터</title>
 </head>
-<body style="font-family: 'Malgun Gothic', sans-serif; margin: 0; padding: 0; background-color: #f4f4f4;">
+<body style="font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; margin: 0; padding: 0; background-color: #f6f8fa;">
 
-    <div style="width: 100%; max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-        
-        <div style="background-color: #4CAF50; color: #ffffff; padding: 20px; text-align: center; border-top-left-radius: 8px; border-top-right-radius: 8px;">
-            <h1 style="margin: 0;">오늘의 AI/주식/머신러닝 뉴스</h1>
-            <p style="margin: 5px 0 0;">{{ today_date }}</p>
+    <div style="width: 100%; max-width: 680px; margin: 20px auto; background-color: #ffffff; border: 1px solid #e1e4e8; border-radius: 6px;">
+
+        <div>
+            <img src="https://images.pexels.com/photos/270404/pexels-photo-270404.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                 alt="News Banner"
+                 style="width: 100%; border-top-left-radius: 6px; border-top-right-radius: 6px; display: block;">
         </div>
 
-        <div style="padding: 20px;">
-            <h2 style="border-bottom: 2px solid #eeeeee; padding-bottom: 10px;">주요 뉴스 목록</h2>
-            
+        <div style="padding: 24px; text-align: center; border-bottom: 1px solid #e1e4e8;">
+            <h1 style="margin: 0; font-size: 24px; color: #24292e;">오늘의 AI/주식/머신러닝 뉴스</h1>
+            <p style="margin: 5px 0 0; color: #586069;">{{ today_date }}</p>
+        </div>
+
+        <div style="padding: 24px;">
+
             {% for news in news_list %}
-            <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #dddddd;">
-                <h3 style="margin: 0 0 10px 0;">
-                    <a href="{{ news.link }}" style="color: #333333; text-decoration: none;">{{ news.title }}</a>
+            <div style="margin-bottom: 32px; padding-bottom: 32px; border-bottom: 1px solid #e1e4e8;">
+                {% if news.image_url %}
+                <div style="margin-bottom: 12px; text-align: center;">
+                    <img src="{{ news.image_url }}" alt="Article Thumbnail" style="max-width: 100%; height: auto; border-radius: 6px; display: block; margin-left: auto; margin-right: auto;">
+                </div>
+                {% endif %}
+                <h3 style="margin: 0 0 8px 0; font-size: 18px;">
+                    <a href="{{ news.link }}" style="color: #0366d6; text-decoration: none; font-weight: 600;">{{ news.title }}</a>
                 </h3>
-                <p style="margin: 0; color: #666666; line-height: 1.6;">
+                <p style="margin: 0; color: #444c56; line-height: 1.6; font-size: 14px;">
                     {{ news.summary }}
                 </p>
             </div>
             {% endfor %}
+            </div>
 
-        </div>
-
-        <div style="text-align: center; padding: 20px; font-size: 12px; color: #aaaaaa; background-color: #f4f4f4; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
-            <p>이 메일은 자동화된 뉴스레터입니다.</p>
+        <div style="text-align: center; padding: 24px; font-size: 12px; color: #586069; background-color: #f6f8fa; border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;">
+            <p style="margin: 0;">이 메일은 GitHub Actions를 통해 자동 발송되었습니다.</p>
         </div>
 
     </div>
