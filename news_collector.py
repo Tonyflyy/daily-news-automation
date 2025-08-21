@@ -52,7 +52,11 @@ def get_news_from_rss():
         'https://www.etnews.com/rss/all.xml',
         'https://www.itworld.co.kr/rss',
         'https://news.einfomax.co.kr/rss/clickTop.xml',
-        'https://www.hankyung.com/feed/it'
+        'https://www.hankyung.com/feed/it',
+        'https://www.bloter.net/rss',
+        'https://www.ciokorea.com/rss',
+        'https://rss.mt.co.kr/mt_all.xml',
+        'https://www.ddaily.co.kr/rss.xml'
     ]
     found_news = []
     unique_links = set()
@@ -132,4 +136,5 @@ if __name__ == "__main__":
         email_subject = f"[{datetime.now().strftime('%Y-%m-%d')}] 오늘의 AI/주식/머신러닝 뉴스"
         send_email_oauth(RECEIVER_EMAIL, email_subject, email_body)
     else:
+
         print("발송할 뉴스가 없습니다.")
