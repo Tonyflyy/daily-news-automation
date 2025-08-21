@@ -195,7 +195,7 @@ def create_email_html(news_list, ai_briefing):
     today_date = datetime.now().strftime("%Y-%m-%d")
     return template.render(news_list=news_list, today_date=today_date, ai_briefing=ai_briefing)
 
-def send_email_oauth(receiver_email, subject, body):
+def send_email_oauth(sender_email, receiver_emails, subject, body):
     SCOPES = ['https://www.googleapis.com/auth/gmail.send']
     creds = None
     if os.path.exists('token.json'):
@@ -211,17 +211,23 @@ def send_email_oauth(receiver_email, subject, body):
     try:
         service = build('gmail', 'v1', credentials=creds)
         message = MIMEText(body, 'html')
-        message['To'] = receiver_email
+        message['To'] = ", ".join(receiver_emails)
+        message['From'] = sender_email
         message['Subject'] = subject
         encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
         create_message = {'raw': encoded_message}
         send_message = (service.users().messages().send(userId="me", body=create_message).execute())
-        print(F'메시지 ID: {send_message["id"]} 이메일 발송 성공!')
+        print(f"메시지 ID: {send_message['id']} 이메일 발송 성공! (수신자: {', '.join(receiver_emails)})")
     except HttpError as error:
-        print(F'이메일 발송 중 오류 발생: {error}')
+        print(f"이메일 발송 중 오류 발생: {error}")
 
 if __name__ == "__main__":
-    RECEIVER_EMAIL = "rjh@ylp.co.kr"
+    # Secret에서 수신자 목록을 불러옵니다.
+    recipients_str = os.getenv('RECIPIENT_LIST', 'rjh@ylp.co.kr')
+    # 쉼표로 구분된 문자열을 이메일 주소 리스트로 변환합니다.
+    recipient_list = [email.strip() for email in recipients_str.split(',')]
+    
+    SENDER_EMAIL = "zzzfbwnsgh@gmail.com" # 발신자 이메일 주소
     
     # 1. 일단 모든 뉴스를 수집합니다.
     all_news_data = get_news_from_rss()
@@ -237,10 +243,11 @@ if __name__ == "__main__":
         # 4. 최종 10개의 뉴스와 브리핑으로 이메일 본문을 만듭니다.
         email_body = create_email_html(top_news_data, ai_briefing_html)
         email_subject = f"[{datetime.now().strftime('%Y-%m-%d')}] 오늘의 AI/주식/머신러닝 Top 10 뉴스"
-        send_email_oauth(RECEIVER_EMAIL, email_subject, email_body)
+        send_email_oauth(SENDER_EMAIL, recipient_list, email_subject, email_body)
         
         # 5. 발송된 10개 뉴스의 링크만 기록합니다.
         new_links_to_save = [news['link'] for news in top_news_data]
         update_sent_links(new_links_to_save)
     else:
         print("발송할 새로운 뉴스가 없습니다.")
+
