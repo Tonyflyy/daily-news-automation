@@ -170,18 +170,22 @@ def get_news_from_rss():
                 if entry.link in sent_links or entry.link in unique_links:
                     continue
                 
-                # 네이버 뉴스는 요약(summary)이 매우 기므로, 본문 일부를 가져오는 것처럼 처리
                 summary_html = entry.get('summary', '요약 없음')
                 soup = BeautifulSoup(summary_html, 'lxml')
                 summary_text = soup.get_text(strip=True)
                 
-                # 키워드 필터링은 그대로 유지
                 keywords = [
-                    '생성형 AI', 'LLM', 'Gemini', 'ChatGPT', '인공지능 윤리', 'AI 반도체',
-                    '증시', '코스피', '나스닥', '반도체', '테마주', '금리', '실적 발표',
-                    '딥러닝', '강화학습', '데이터 과학', '컴퓨터 비전', '자연어 처리', 'NLP',
-                    '인공지능', '주식', '증시', '머신러닝'
+                    # AI / ML
+                    'AI', '인공지능', '머신러닝', '딥러닝', 'LLM', '생성형', 'ChatGPT', 'Gemini', 
+                    'AI반도체', 'HBM', 'CXL',
+                    # 주식 / 경제
+                    '주식', '증시', '코스피', '나스닥', '금리', '환율', '실적', '투자', 'M&A',
+                    # 주요 기업
+                    '삼성전자', 'SK하이닉스', '엔비디아', '네이버', '카카오', '구글', '애플', 'MS',
+                    # 기타 IT
+                    '클라우드', '데이터', '빅데이터'
                 ]
+
                 search_text = entry.title + " " + summary_text
                 
                 for keyword in keywords:
@@ -250,6 +254,7 @@ if __name__ == "__main__":
         update_sent_links(new_links_to_save)
     else:
         print("발송할 새로운 뉴스가 없습니다.")
+
 
 
 
