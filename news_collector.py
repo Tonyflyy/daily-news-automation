@@ -1,46 +1,33 @@
-# news_collector.py (이미지 썸네일 기능 추가 버전)
-
 import os
-import google.generativeai as genai
-from urllib.parse import urljoin, urlparse 
-import os.path
 import base64
+import markdown 
 from email.mime.text import MIMEText
+from urllib.parse import urljoin, urlparse
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-
+import google.generativeai as genai
 import feedparser
 from bs4 import BeautifulSoup
 from jinja2 import Environment, FileSystemLoader
 from datetime import datetime
-import requests # 웹 페이지 요청을 위해 추가
+import requests
 
-
-# news_collector.py 파일에서 이 함수를 교체해주세요.
-
+# --- AI 브리핑 생성 함수 ---
 def generate_ai_briefing(news_list):
-    """
-    뉴스 목록(제목+요약)을 Gemini API에 보내 심층적인 데일리 브리핑을 생성합니다.
-    """
-    print("AI 심층 브리핑 생성을 시작합니다...")
+    print("AI 서식화 브리핑 생성을 시작합니다...")
     try:
         api_key = os.getenv('GEMINI_API_KEY')
         if not api_key:
             print("GEMINI_API_KEY가 설정되지 않았습니다.")
             return None
-
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel('gemini-1.5-flash-latest')
-
-        # AI에게 전달할 뉴스 정보를 미리 가공합니다.
         news_context = ""
         for news in news_list:
             news_context += f"제목: {news['title']}\n요약: {news['summary']}\n\n"
-
-        # AI에게 더 구체적인 역할을 부여하는 프롬프트
         prompt = f"""
         당신은 탁월한 통찰력을 가진 IT/경제 뉴스 큐레이터입니다.
         아래 뉴스 목록을 분석하여, 독자를 위한 매우 읽기 쉬운 '데일리 브리핑'을 작성해주세요.
@@ -56,28 +43,20 @@ def generate_ai_briefing(news_list):
         [오늘의 뉴스 목록]
         {news_context}
         """
-
         response = model.generate_content(prompt)
-        print("AI 심층 브리핑 생성 성공!")
+        print("AI 서식화 브리핑 생성 성공!")
         return response.text
     except Exception as e:
         print(f"AI 브리핑 생성 중 오류 발생: {e}")
         return None
 
-
-
-
-
-# --- 새로 추가된 기능: URL에서 대표 이미지(og:image) 가져오기 ---
-def get_image_from_url(url):
-    """
-    주어진 URL의 웹 페이지에서 Open Graph(og:image) 이미지 주소를 추출합니다.
-    """
+# --- 이미지 주소 추출 함수 (page_url 버그 수정) ---
+# <<<<<<<<<<<<<<<<<<<< 2번 문제 해결: 올바른 함수로 교체
+def get_image_from_url(page_url):
     try:
-        # 일부 웹사이트는 봇의 접근을 막기 때문에, 일반 브라우저처럼 보이도록 헤더를 추가합니다.
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
-        response = requests.get(url, headers=headers, timeout=10)
-        response.raise_for_status() # 오류가 발생하면 예외를 발생시킴
+        response = requests.get(page_url, headers=headers, timeout=10)
+        response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
         og_image = soup.find('meta', property='og:image')
         
@@ -90,13 +69,11 @@ def get_image_from_url(url):
             return image_url
             
     except Exception as e:
-        print(f"이미지 URL 추출 중 오류 발생 (URL: {url}): {e}")
-        
-    # 이미지를 찾지 못했거나 오류가 발생하면 None을 반환합니다.
+        print(f"이미지 URL 추출 중 오류 발생 (URL: {page_url}): {e}")
     return None
 
+# --- 링크 기록 업데이트 함수 ---
 def update_sent_links(links):
-    """링크 목록을 send_links.txt파일에 추가"""
     try:
         with open('sent_links.txt', 'a', encoding='utf-8') as f:
             for link in links:
@@ -104,8 +81,8 @@ def update_sent_links(links):
         print(f"{len(links)}개의 새 링크를 sent_links.txt에 추가했습니다.")
     except Exception as e:
         print(f"sent_links.txt 파일 업데이트 중 오류 발생: {e}")
-        
 
+# --- 뉴스 수집 함수 ---
 def get_news_from_rss():
     sent_links = set()
     try:
@@ -114,25 +91,13 @@ def get_news_from_rss():
         print(f"총 {len(sent_links)}개의 보낸 기록을 sent_links.txt에서 불러왔습니다.")
     except FileNotFoundError:
         print("sent_links.txt 파일을 찾을 수 없어, 새로운 기록을 시작합니다.")
-    except Exception as e:
-        print(f"sent_links.txt 파일 로딩 중 오류 발생: {e}")
-    keywords = [
-        '생성형 AI', 'LLM', 'Gemini', 'ChatGPT', '인공지지능 윤리', 'AI 반도체',
-        '증시', '코스피', '나스닥', '반도체', '테마주', '금리', '실적 발표',
-        '딥러닝', '강화학습', '데이터 과학', '컴퓨터 비전', '자연어 처리', 'NLP'
-    ]
     rss_feeds = [
-        'https://www.zdnet.co.kr/rss/all.xml',
-        'https://www.etnews.com/rss/all.xml',
-        'https://www.itworld.co.kr/rss',
-        'https://news.einfomax.co.kr/rss/clickTop.xml',
-        'https://www.hankyung.com/feed/it',
-        'https://www.bloter.net/rss',
-        'https://www.ciokorea.com/rss',
-        'https://rss.mt.co.kr/mt_all.xml',
-        'https://www.ddaily.co.kr/rss.xml'
+        'https://www.zdnet.co.kr/rss/all.xml', 'https://www.etnews.com/rss/all.xml',
+        'https://www.itworld.co.kr/rss', 'https://news.einfomax.co.kr/rss/clickTop.xml',
+        'https://www.hankyung.com/feed/it', 'https://www.bloter.net/rss',
+        'https://www.ciokorea.com/rss', 'https://rss.mt.co.kr/mt_all.xml',
+        'http://www.ddaily.co.kr/rss.xml'
     ]
-    
     found_news = []
     unique_links = set()
     print("뉴스 수집을 시작합니다...")
@@ -142,7 +107,6 @@ def get_news_from_rss():
             for entry in feed.entries:
                 if entry.link in sent_links or entry.link in unique_links:
                     continue
-                
                 search_text = entry.title + " " + entry.get('summary', '')
                 keywords = [
                     '생성형 AI', 'LLM', 'Gemini', 'ChatGPT', '인공지능 윤리', 'AI 반도체',
@@ -159,7 +123,7 @@ def get_news_from_rss():
                             'title': entry.title, 'link': entry.link,
                             'summary': summary_text[:150] + '...', 'image_url': image_url
                         }
-                        print(f"DEBUG: 수집된 뉴스 아이템: {news_item}")
+                        # print(f"DEBUG: 수집된 뉴스 아이템: {news_item}")
                         found_news.append(news_item)
                         unique_links.add(entry.link)
                         break
@@ -168,11 +132,11 @@ def get_news_from_rss():
     print(f"총 {len(found_news)}개의 새로운 뉴스를 찾았습니다.")
     return found_news
 
+# --- 이메일 생성 및 발송 함수 ---
 def create_email_html(news_list, ai_briefing):
     env = Environment(loader=FileSystemLoader('.'))
     template = env.get_template('email_template.html')
     today_date = datetime.now().strftime("%Y-%m-%d")
-    # 템플릿에 ai_briefing 변수를 전달
     return template.render(news_list=news_list, today_date=today_date, ai_briefing=ai_briefing)
 
 def send_email_oauth(receiver_email, subject, body):
@@ -200,32 +164,17 @@ def send_email_oauth(receiver_email, subject, body):
     except HttpError as error:
         print(F'이메일 발송 중 오류 발생: {error}')
 
-# --- main 실행 부분 ---
+# --- 메인 실행 ---
 if __name__ == "__main__":
     RECEIVER_EMAIL = "rjh@ylp.co.kr"
     news_data = get_news_from_rss()
     if news_data:
-        # 1. AI가 마크다운 형식으로 브리핑 생성
         ai_briefing_markdown = generate_ai_briefing(news_data)
-        # 2. 마크다운을 HTML로 변환
         ai_briefing_html = markdown.markdown(ai_briefing_markdown) if ai_briefing_markdown else None
-        # 3. HTML로 변환된 브리핑을 이메일 본문에 전달
         email_body = create_email_html(news_data, ai_briefing_html)
-        
         email_subject = f"[{datetime.now().strftime('%Y-%m-%d')}] 오늘의 AI/주식/머신러닝 뉴스"
         send_email_oauth(RECEIVER_EMAIL, email_subject, email_body)
-        
         new_links_to_save = [news['link'] for news in news_data]
         update_sent_links(new_links_to_save)
     else:
         print("발송할 새로운 뉴스가 없습니다.")
-
-# (get_news_from_rss, update_sent_links, send_email_oauth 등 다른 함수는 기존과 동일합니다.)
-# (위 코드에서는 생략되었지만, 실제 파일에서는 그대로 유지해야 합니다.)
-
-
-
-
-
-
-
