@@ -50,21 +50,43 @@ def generate_ai_briefing(news_list):
         return None
 
 def get_image_from_url(page_url):
+    """
+    웹 페이지에서 대표 이미지 URL을 추출하고, 해당 URL이 유효한지 검사합니다.
+    """
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
         response = requests.get(page_url, headers=headers, timeout=10)
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
         og_image = soup.find('meta', property='og:image')
+        
         if og_image and og_image.get('content'):
             image_url = og_image['content']
+            
             if image_url.startswith('/'):
                 parsed_uri = urlparse(page_url)
                 base_url = f"{parsed_uri.scheme}://{parsed_uri.netloc}"
                 image_url = urljoin(base_url, image_url)
-            return image_url
+
+            # --- 새로 추가된 이미지 유효성 검사 단계 ---
+            try:
+                # HEAD 요청으로 이미지 전체를 다운로드하지 않고 헤더 정보만 빠르게 가져옵니다.
+                image_res = requests.head(image_url, timeout=5, allow_redirects=True, headers=headers)
+                
+                # HTTP 상태 코드가 200 (성공)이고, 콘텐츠 타입이 'image/'로 시작하는지 확인합니다.
+                if image_res.status_code == 200 and 'image' in image_res.headers.get('Content-Type', '').lower():
+                    print(f"✅ 이미지 유효성 검사 성공: {image_url}")
+                    return image_url # 유효한 경우에만 이미지 URL을 반환합니다.
+                else:
+                    print(f"❌ 이미지 유효성 검사 실패 (Status: {image_res.status_code}, Type: {image_res.headers.get('Content-Type')}): {image_url}")
+            
+            except Exception as e:
+                print(f"이미지 유효성 검사 중 네트워크 오류: {e}")
+            # --- 유효성 검사 끝 ---
+            
     except Exception as e:
-        print(f"이미지 URL 추출 중 오류 발생 (URL: {page_url}): {e}")
+        print(f"이미지 URL 추출을 위한 페이지 로딩 중 오류 발생 (URL: {page_url}): {e}")
+        
     return None
 
 def update_sent_links(links):
@@ -306,6 +328,7 @@ if __name__ == "__main__":
         update_sent_links(new_links_to_save)
     else:
         print("발송할 새로운 뉴스가 없습니다.")
+
 
 
 
