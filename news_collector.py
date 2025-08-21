@@ -154,7 +154,6 @@ def get_news_from_rss():
     except FileNotFoundError:
         print("sent_links.txt 파일을 찾을 수 없어, 새로운 기록을 시작합니다.")
     
-    # RSS 주소를 네이버 뉴스의 IT/과학, 경제 카테고리로 변경
     rss_feeds = [
         'https://news.naver.com/main/rss.naver?sid1=105',  # IT/과학
         'https://news.naver.com/main/rss.naver?sid1=101',  # 경제
@@ -165,7 +164,8 @@ def get_news_from_rss():
     print("네이버 뉴스 RSS를 통해 뉴스 수집을 시작합니다...")
     for url in rss_feeds:
         try:
-            feed = feedparser.parse(url)
+            feed = feedparser.parse(url, agent='Mozilla/5.0')
+
             for entry in feed.entries:
                 if entry.link in sent_links or entry.link in unique_links:
                     continue
@@ -175,17 +175,11 @@ def get_news_from_rss():
                 summary_text = soup.get_text(strip=True)
                 
                 keywords = [
-                    # AI / ML
                     'AI', '인공지능', '머신러닝', '딥러닝', 'LLM', '생성형', 'ChatGPT', 'Gemini', 
-                    'AI반도체', 'HBM', 'CXL',
-                    # 주식 / 경제
-                    '주식', '증시', '코스피', '나스닥', '금리', '환율', '실적', '투자', 'M&A',
-                    # 주요 기업
-                    '삼성전자', 'SK하이닉스', '엔비디아', '네이버', '카카오', '구글', '애플', 'MS',
-                    # 기타 IT
-                    '클라우드', '데이터', '빅데이터'
+                    'AI반도체', 'HBM', 'CXL', '주식', '증시', '코스피', '나스닥', '금리', 
+                    '환율', '실적', '투자', 'M&A', '삼성전자', 'SK하이닉스', '엔비디아', 
+                    '네이버', '카카오', '구글', '애플', 'MS', '클라우드', '데이터', '빅데이터'
                 ]
-
                 search_text = entry.title + " " + summary_text
                 
                 for keyword in keywords:
@@ -254,6 +248,7 @@ if __name__ == "__main__":
         update_sent_links(new_links_to_save)
     else:
         print("발송할 새로운 뉴스가 없습니다.")
+
 
 
 
