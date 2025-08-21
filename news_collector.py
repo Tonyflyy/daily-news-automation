@@ -2,6 +2,7 @@ import os
 import base64
 import markdown 
 from email.mime.text import MIMEText
+from urllib.parse import urljoin, urlparse, quote
 from urllib.parse import urljoin, urlparse
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -294,6 +295,7 @@ if __name__ == "__main__":
         update_sent_links(new_links_to_save)
     else:
         print("발송할 새로운 뉴스가 없습니다.")
+
 
 
 
