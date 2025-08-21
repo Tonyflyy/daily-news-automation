@@ -181,6 +181,70 @@ def get_news_from_rss():
     print("\n--- [디버깅 완료] ---")
     # 디버깅 중에는 이메일을 보내지 않도록 의도적으로 빈 리스트를 반환합니다.
     return []
+
+def get_news_from_naver_api():
+    sent_links = set()
+    try:
+        with open('sent_links.txt', 'r', encoding='utf-8') as f:
+            sent_links = set(line.strip() for line in f)
+        print(f"총 {len(sent_links)}개의 보낸 기록을 sent_links.txt에서 불러왔습니다.")
+    except FileNotFoundError:
+        print("sent_links.txt 파일을 찾을 수 없어, 새로운 기록을 시작합니다.")
+
+    client_id = os.getenv('NAVER_CLIENT_ID')
+    client_secret = os.getenv('NAVER_CLIENT_SECRET')
+
+    if not client_id or not client_secret:
+        print("네이버 API 키가 설정되지 않았습니다.")
+        return []
+
+    keywords = ["AI", "인공지능", "반도체", "주식", "증시", "머신러닝", "딥러닝", "LLM", "삼성전자", "엔비디아"]
+    query = " OR ".join(keywords)
+    
+    headers = {
+        "X-Naver-Client-Id": client_id,
+        "X-Naver-Client-Secret": client_secret,
+    }
+    # API는 하루치 검색(date)을 지원하지 않으므로, 최신순(sim)으로 100개를 요청하여 필터링
+    url = f"https://openapi.naver.com/v1/search/news.json?query={quote(query)}&display=100&sort=sim"
+
+    found_news = []
+    print("네이버 검색 API를 통해 뉴스 수집을 시작합니다...")
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        data = response.json()
+        articles = data.get('items', [])
+
+        for article in articles:
+            # 네이버 뉴스가 아닌 링크(예: 연예뉴스)는 건너뛰기
+            if "n.news.naver.com" not in article['link']:
+                continue
+            
+            link = article['originallink'] # 원본 기사 링크
+            if link in sent_links:
+                continue
+
+            # API가 돌려주는 HTML 태그(<b>)를 제거
+            soup_title = BeautifulSoup(article['title'], 'html.parser')
+            clean_title = soup_title.get_text(strip=True)
+            soup_desc = BeautifulSoup(article['description'], 'html.parser')
+            clean_desc = soup_desc.get_text(strip=True)
+
+            image_url = get_image_from_url(link)
+            news_item = {
+                'title': clean_title,
+                'link': link,
+                'summary': clean_desc[:150] + '...',
+                'image_url': image_url
+            }
+            found_news.append(news_item)
+            
+    except Exception as e:
+        print(f"네이버 API 요청 중 오류 발생: {e}")
+
+    print(f"총 {len(found_news)}개의 새로운 뉴스를 찾았습니다.")
+    return found_news
     
 
 # --- 이메일 생성 및 발송 함수 ---
@@ -219,7 +283,7 @@ def send_email_oauth(receiver_email, subject, body):
 if __name__ == "__main__":
     RECEIVER_EMAIL = "rjh@ylp.co.kr"
     #news_data = get_news_from_api()
-    news_data = get_news_from_rss()
+    news_data = get_news_from_naver_api()
     if news_data:
         ai_briefing_markdown = generate_ai_briefing(news_data)
         ai_briefing_html = markdown.markdown(ai_briefing_markdown) if ai_briefing_markdown else None
@@ -230,6 +294,7 @@ if __name__ == "__main__":
         update_sent_links(new_links_to_save)
     else:
         print("발송할 새로운 뉴스가 없습니다.")
+
 
 
 
