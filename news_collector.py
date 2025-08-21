@@ -19,11 +19,13 @@ from datetime import datetime
 import requests # 웹 페이지 요청을 위해 추가
 
 
-def generate_ai_briefing(news_titles):
+# news_collector.py 파일에서 이 함수를 교체해주세요.
+
+def generate_ai_briefing(news_list):
     """
-    뉴스 제목 목록을 Gemini API에 보내 데일리 브리핑을 생성합니다.
+    뉴스 목록(제목+요약)을 Gemini API에 보내 심층적인 데일리 브리핑을 생성합니다.
     """
-    print("AI 브리핑 생성을 시작합니다...")
+    print("AI 심층 브리핑 생성을 시작합니다...")
     try:
         api_key = os.getenv('GEMINI_API_KEY')
         if not api_key:
@@ -33,26 +35,31 @@ def generate_ai_briefing(news_titles):
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
-        titles_string = "\n- ".join(news_titles)
+        # AI에게 전달할 뉴스 정보를 미리 가공합니다.
+        news_context = ""
+        for news in news_list:
+            news_context += f"제목: {news['title']}\n요약: {news['summary']}\n\n"
 
-        # 그 다음 f-string 안에서 변수를 사용합니다.
+        # AI에게 더 구체적인 역할을 부여하는 프롬프트
         prompt = f"""
-        당신은 IT와 경제 뉴스를 분석하는 전문 뉴스 에디터입니다.
-        아래는 오늘 수집된 주요 뉴스 제목 목록입니다.
-        이 제목들을 바탕으로, 오늘 하루의 가장 중요한 기술 및 경제 트렌드를 요약하는 2~3 문장의 흥미로운 서두를 작성해주세요.
-        독자들이 뉴스를 계속 읽고 싶게 만들어야 합니다. 격식 있고 전문적인 톤을 유지해주세요.
+        당신은 예리한 통찰력을 가진 IT 및 경제 전문 애널리스트입니다.
+        아래는 오늘 수집된 주요 뉴스의 제목과 요약 목록입니다.
 
-        [뉴스 제목 목록]
-        - {titles_string}
+        당신의 임무는 이 기사들을 종합적으로 분석하여, 그 안에 숨겨진 핵심 트렌드나 오늘 가장 중요한 사건을 파악하는 것입니다.
+        단순히 주제를 나열하지 말고, 여러 기사에 걸쳐 나타나는 공통된 주제나 인과 관계를 엮어서 하나의 흥미로운 이야기로 만들어주세요.
+        이 분석을 바탕으로, 뉴스레터 최상단에 들어갈 2~3 문장의 '에디터 브리핑'을 작성해주세요.
+        독자들이 본문을 꼭 읽고 싶게 만드는 전문적이면서도 흥미로운 글이어야 합니다.
+
+        [오늘의 뉴스 목록]
+        {news_context}
         """
 
         response = model.generate_content(prompt)
-        print("AI 브리핑 생성 성공!")
+        print("AI 심층 브리핑 생성 성공!")
         return response.text
     except Exception as e:
         print(f"AI 브리핑 생성 중 오류 발생: {e}")
         return None
-    
 
 
 
@@ -193,17 +200,11 @@ def send_email_oauth(receiver_email, subject, body):
 # --- main 실행 부분 ---
 if __name__ == "__main__":
     RECEIVER_EMAIL = "rjh@ylp.co.kr"
-    
     news_data = get_news_from_rss()
-    
     if news_data:
-        # 1. AI 브리핑 생성
-        news_titles = [news['title'] for news in news_data]
-        ai_briefing = generate_ai_briefing(news_titles)
+        ai_briefing = generate_ai_briefing(news_data)
         
-        # 2. 이메일 본문 생성 (AI 브리핑 전달)
         email_body = create_email_html(news_data, ai_briefing)
-
         email_subject = f"[{datetime.now().strftime('%Y-%m-%d')}] 오늘의 AI/주식/머신러닝 뉴스"
         send_email_oauth(RECEIVER_EMAIL, email_subject, email_body)
         
@@ -214,6 +215,7 @@ if __name__ == "__main__":
 
 # (get_news_from_rss, update_sent_links, send_email_oauth 등 다른 함수는 기존과 동일합니다.)
 # (위 코드에서는 생략되었지만, 실제 파일에서는 그대로 유지해야 합니다.)
+
 
 
 
