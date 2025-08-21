@@ -13,6 +13,7 @@ import feedparser
 from bs4 import BeautifulSoup
 from jinja2 import Environment, FileSystemLoader
 from datetime import datetime
+from datetime import datetime, timedelta
 import requests
 
 # --- AI 브리핑 생성 함수 ---
@@ -96,15 +97,25 @@ def get_news_from_api():
         print("GNEWS_API_KEY가 설정되지 않았습니다.")
         return []
 
-    # 검색할 키워드를 OR로 묶어 하나의 쿼리로 만듭니다.
-    query = "AI OR 주식 OR 머신러닝"
-    # GNews API 엔드포인트 URL
+    # --- 이 부분이 개선되었습니다 ---
+    # 1. 키워드 확장 및 검색 쿼리 형식 변경
+    keywords = ["AI", "인공지능", "반도체", "주식", "증시", "머신러닝", "딥러닝", "LLM"]
+    query = " OR ".join(f'"{k}"' for k in keywords) # 각 키워드를 큰따옴표로 묶어 정확도 향상
+
+    # 2. 어제 날짜 계산 (ISO 8601 형식)
+    yesterday = datetime.now() - timedelta(days=1)
+    from_time = yesterday.strftime('%Y-%m-%dT%H:%M:%SZ')
+
+    # 3. API 요청 URL에 새로운 파라미터 추가
     url = (f'https://gnews.io/api/v4/search?'
-           f'q="{query}"&'
-           f'lang=ko&'      # 한국어 뉴스만 검색
-           f'country=kr&'   # 대한민국 뉴스로 제한
-           f'max=15&'       # 최대 15개 기사 요청
+           f'q={query}&'
+           f'lang=ko&'
+           f'country=kr&'
+           f'max=25&'
+           f'in=title&'             # '제목'에서만 검색하도록 지정
+           f'from={from_time}&'      # '어제'부터 검색하도록 지정
            f'apikey={api_key}')
+    # --- 여기까지 ---
     
     found_news = []
     print("GNews API를 통해 뉴스 수집을 시작합니다...")
@@ -116,11 +127,9 @@ def get_news_from_api():
 
         for article in articles:
             link = article['url']
-            # 중복 링크 확인
             if link in sent_links:
                 continue
             
-            # GNews API 결과와 우리 기존 데이터 형식을 맞춰줍니다.
             image_url = get_image_from_url(link)
             news_item = {
                 'title': article['title'],
@@ -231,4 +240,5 @@ if __name__ == "__main__":
         update_sent_links(new_links_to_save)
     else:
         print("발송할 새로운 뉴스가 없습니다.")
+
 
