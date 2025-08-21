@@ -238,7 +238,8 @@ def send_email_oauth(receiver_email, subject, body):
 # --- 메인 실행 ---
 if __name__ == "__main__":
     RECEIVER_EMAIL = "rjh@ylp.co.kr"
-    news_data = get_news_from_api()
+    #news_data = get_news_from_api()
+    news_data = get_news_from_rss()
     if news_data:
         ai_briefing_markdown = generate_ai_briefing(news_data)
         ai_briefing_html = markdown.markdown(ai_briefing_markdown) if ai_briefing_markdown else None
@@ -249,6 +250,7 @@ if __name__ == "__main__":
         update_sent_links(new_links_to_save)
     else:
         print("발송할 새로운 뉴스가 없습니다.")
+
 
 
 
