@@ -40,8 +40,28 @@ def get_image_from_url(url):
     # 이미지를 찾지 못했거나 오류가 발생하면 None을 반환합니다.
     return None
 
+def update_sent_links(links):
+    """링크 목록을 send_links.txt파일에 추가"""
+    try:
+        with open('sent_links.txt', 'a', encoding='utf-8') as f:
+            for link in links:
+                f.write(link + '\n')
+        print(f"{len(links)}개의 새 링크를 sent_links.txt에 추가했습니다.")
+    except Exception as e:
+        print(f"sent_links.txt 파일 업데이트 중 오류 발생: {e}")
+        
+
 # --- 1. 뉴스 수집 기능 (이미지 URL 가져오는 부분 추가) ---
 def get_news_from_rss():
+    sent_links = set()
+    try:
+        with open('sent_links.txt', 'r', encoding='utf-8') as f:
+            sent_links = set(line.strip() for line in f)
+        print(f"총 {len(sent_links)}개의 보낸 기록을 sent_links.txt에서 불러왔습니다.")
+    except FileNotFoundError:
+        print("sent_links.txt 파일을 찾을 수 없어, 새로운 기록을 시작합니다.")
+    except Exception as e:
+        print(f"sent_links.txt 파일 로딩 중 오류 발생: {e}")
     keywords = [
         '생성형 AI', 'LLM', 'Gemini', 'ChatGPT', '인공지지능 윤리', 'AI 반도체',
         '증시', '코스피', '나스닥', '반도체', '테마주', '금리', '실적 발표',
@@ -58,6 +78,7 @@ def get_news_from_rss():
         'https://rss.mt.co.kr/mt_all.xml',
         'https://www.ddaily.co.kr/rss.xml'
     ]
+    
     found_news = []
     unique_links = set()
     print("뉴스 수집을 시작합니다...")
@@ -65,33 +86,31 @@ def get_news_from_rss():
         try:
             feed = feedparser.parse(url)
             for entry in feed.entries:
-                if entry.link in unique_links:
+                if entry.link in sent_links or entry.link in unique_links:
                     continue
+                
                 search_text = entry.title + " " + entry.get('summary', '')
+                keywords = [
+                    '생성형 AI', 'LLM', 'Gemini', 'ChatGPT', '인공지능 윤리', 'AI 반도체',
+                    '증시', '코스피', '나스닥', '반도체', '테마주', '금리', '실적 발표',
+                    '딥러닝', '강화학습', '데이터 과학', '컴퓨터 비전', '자연어 처리', 'NLP'
+                ]
                 for keyword in keywords:
                     if keyword.lower() in search_text.lower():
                         summary_html = entry.get('summary', '요약 없음')
                         soup = BeautifulSoup(summary_html, 'lxml')
                         summary_text = soup.get_text(strip=True)
-                        
-                        # --- 이 부분이 수정되었습니다 ---
-                        # 각 기사 링크에서 대표 이미지 URL을 가져옵니다.
                         image_url = get_image_from_url(entry.link)
-                        
                         news_item = {
-                            'title': entry.title,
-                            'link': entry.link,
-                            'summary': summary_text[:150] + '...',
-                            'image_url': image_url  # 딕셔너리에 이미지 URL 추가
+                            'title': entry.title, 'link': entry.link,
+                            'summary': summary_text[:150] + '...', 'image_url': image_url
                         }
-                        # --- 여기까지 ---
-                        
                         found_news.append(news_item)
                         unique_links.add(entry.link)
                         break
         except Exception as e:
             print(f"'{url}' 처리 중 오류 발생: {e}")
-    print(f"총 {len(found_news)}개의 뉴스를 찾았습니다.")
+    print(f"총 {len(found_news)}개의 새로운 뉴스를 찾았습니다.")
     return found_news
 
 # --- 2. 이메일 HTML 생성 기능 (변경 없음) ---
@@ -135,6 +154,10 @@ if __name__ == "__main__":
         email_body = create_email_html(news_data)
         email_subject = f"[{datetime.now().strftime('%Y-%m-%d')}] 오늘의 AI/주식/머신러닝 뉴스"
         send_email_oauth(RECEIVER_EMAIL, email_subject, email_body)
+
+        new_links_to_save = [news['link'] for news in news_data]
+        update_sent_links(new_links_to_save)
     else:
 
         print("발송할 뉴스가 없습니다.")
+
