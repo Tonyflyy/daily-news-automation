@@ -2,6 +2,7 @@
 
 import os
 import google.generativeai as genai
+from urllib.parse import urljoin, urlparse 
 import os.path
 import base64
 from email.mime.text import MIMEText
@@ -30,7 +31,7 @@ def generate_ai_briefing(news_titles):
             return None
 
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-pro')
+        model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
         titles_string = "\n- ".join(news_titles)
 
@@ -67,14 +68,16 @@ def get_image_from_url(url):
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
         response = requests.get(url, headers=headers, timeout=10)
         response.raise_for_status() # 오류가 발생하면 예외를 발생시킴
-
         soup = BeautifulSoup(response.text, 'html.parser')
-        
-        # 'og:image' 메타 태그를 찾아 이미지 URL을 반환합니다.
         og_image = soup.find('meta', property='og:image')
         
         if og_image and og_image.get('content'):
-            return og_image['content']
+            image_url = og_image['content']
+            if image_url.startswith('/'):
+                parsed_uri = urlparse(page_url)
+                base_url = f"{parsed_uri.scheme}://{parsed_uri.netloc}"
+                image_url = urljoin(base_url, image_url)
+            return image_url
             
     except Exception as e:
         print(f"이미지 URL 추출 중 오류 발생 (URL: {url}): {e}")
@@ -211,6 +214,7 @@ if __name__ == "__main__":
 
 # (get_news_from_rss, update_sent_links, send_email_oauth 등 다른 함수는 기존과 동일합니다.)
 # (위 코드에서는 생략되었지만, 실제 파일에서는 그대로 유지해야 합니다.)
+
 
 
 
