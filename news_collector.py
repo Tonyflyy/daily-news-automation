@@ -1,5 +1,7 @@
 # news_collector.py (이미지 썸네일 기능 추가 버전)
 
+import os
+import google.generativeai as genai
 import os.path
 import base64
 from email.mime.text import MIMEText
@@ -14,6 +16,44 @@ from bs4 import BeautifulSoup
 from jinja2 import Environment, FileSystemLoader
 from datetime import datetime
 import requests # 웹 페이지 요청을 위해 추가
+
+
+def generate_ai_briefing(news_titles):
+    """
+    뉴스 제목 목록을 잼민이 api에 보내 데일리 브리핑을 생성
+    """
+    print("AI 브리핑 생성을 시작합니다...")
+    try:
+        #환경 변수에서 API키를 가져옴
+        api_key = os.getenv('GEMINI_API_KEY')
+        if not api_key:
+            print("GEMINI_API_KEY가 설정되지 않았습니다.")
+            return None
+
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel('gemini-pro')
+        #AI에게 역할을 부여하고 지시하는 프롬프트
+        prompt = f"""
+        당신은 IT와 경제 뉴스를 분석하는 전문 뉴스 에디터입니다.
+        아래는 오늘 수집된 주요 뉴스 제목 목록입니다.
+        이 제목들을 바탕으로, 오늘 하루의 가장 중요한 기술 및 경제 트렌드를 요약하는 2~3 문장의 흥미로운 서두를 작성해주세요.
+        독자들이 뉴스를 계속 읽고 싶게 만들어야 합니다. 격식 있고 전문적인 톤을 유지해주세요.
+
+        [뉴스 제목 목록]
+        - {'\n- '.join(news_titles)}
+        """
+
+        response = model.generate_content(prompt)
+        print("AI 브리핑 생성 성공!")
+        return response.text
+    except Exception as e:
+        print(f"AI 브리핑 생성 중 오류 발생: {e}")
+        return None
+    
+
+
+
+
 
 # --- 새로 추가된 기능: URL에서 대표 이미지(og:image) 가져오기 ---
 def get_image_from_url(url):
@@ -51,7 +91,6 @@ def update_sent_links(links):
         print(f"sent_links.txt 파일 업데이트 중 오류 발생: {e}")
         
 
-# --- 1. 뉴스 수집 기능 (이미지 URL 가져오는 부분 추가) ---
 def get_news_from_rss():
     sent_links = set()
     try:
@@ -113,14 +152,13 @@ def get_news_from_rss():
     print(f"총 {len(found_news)}개의 새로운 뉴스를 찾았습니다.")
     return found_news
 
-# --- 2. 이메일 HTML 생성 기능 (변경 없음) ---
-def create_email_html(news_list):
+def create_email_html(news_list, ai_briefing):
     env = Environment(loader=FileSystemLoader('.'))
     template = env.get_template('email_template.html')
     today_date = datetime.now().strftime("%Y-%m-%d")
-    return template.render(news_list=news_list, today_date=today_date)
+    # 템플릿에 ai_briefing 변수를 전달
+    return template.render(news_list=news_list, today_date=today_date, ai_briefing=ai_briefing)
 
-# --- 3. OAuth 인증 및 이메일 발송 기능 (변경 없음) ---
 def send_email_oauth(receiver_email, subject, body):
     SCOPES = ['https://www.googleapis.com/auth/gmail.send']
     creds = None
@@ -146,18 +184,29 @@ def send_email_oauth(receiver_email, subject, body):
     except HttpError as error:
         print(F'이메일 발송 중 오류 발생: {error}')
 
-# --- 메인 코드 실행 부분 (변경 없음) ---
+# --- main 실행 부분 ---
 if __name__ == "__main__":
     RECEIVER_EMAIL = "rjh@ylp.co.kr"
+    
     news_data = get_news_from_rss()
+    
     if news_data:
-        email_body = create_email_html(news_data)
+        # 1. AI 브리핑 생성
+        news_titles = [news['title'] for news in news_data]
+        ai_briefing = generate_ai_briefing(news_titles)
+        
+        # 2. 이메일 본문 생성 (AI 브리핑 전달)
+        email_body = create_email_html(news_data, ai_briefing)
+
         email_subject = f"[{datetime.now().strftime('%Y-%m-%d')}] 오늘의 AI/주식/머신러닝 뉴스"
         send_email_oauth(RECEIVER_EMAIL, email_subject, email_body)
-
+        
         new_links_to_save = [news['link'] for news in news_data]
         update_sent_links(new_links_to_save)
     else:
+        print("발송할 새로운 뉴스가 없습니다.")
 
-        print("발송할 뉴스가 없습니다.")
+# (get_news_from_rss, update_sent_links, send_email_oauth 등 다른 함수는 기존과 동일합니다.)
+# (위 코드에서는 생략되었지만, 실제 파일에서는 그대로 유지해야 합니다.)
+
 
