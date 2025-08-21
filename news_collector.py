@@ -74,6 +74,61 @@ def update_sent_links(links):
     except Exception as e:
         print(f"sent_links.txt 파일 업데이트 중 오류 발생: {e}")
 
+# --- 새로 추가된 AI 뉴스 선별 함수 ---
+def select_top_news_with_ai(news_list):
+    """
+    전체 뉴스 목록을 Gemini API에 보내 가장 중요한 Top 10 뉴스를 선별합니다.
+    """
+    print(f"AI 뉴스 큐레이션을 시작합니다... (대상: {len(news_list)}개)")
+    try:
+        api_key = os.getenv('GEMINI_API_KEY')
+        if not api_key:
+            print("GEMINI_API_KEY가 설정되지 않았습니다.")
+            return news_list[:10] # AI를 사용할 수 없으면 그냥 앞 10개를 반환
+
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel('gemini-1.5-flash-latest')
+
+        # AI에게 전달할 뉴스 정보를 가공합니다.
+        news_context_for_selection = ""
+        for i, news in enumerate(news_list):
+            news_context_for_selection += f"기사 #{i}:\n제목: {news['title']}\n요약: {news['summary']}\n\n"
+
+        # AI에게 뉴스 선별을 지시하는 프롬프트
+        prompt = f"""
+        당신은 한국의 IT/경제 분야를 다루는 전문 뉴스 편집장입니다.
+        아래는 오늘 수집된 뉴스 기사 목록입니다. 각 기사에는 고유한 번호(#)가 있습니다.
+
+        당신의 임무는 이 모든 기사를 검토하여, 오늘 독자들이 반드시 알아야 할 **가장 중요하고 영향력 있는 기사 10개**를 선별하는 것입니다.
+        시장 동향, 기술 혁신, 주요 기업 소식 등을 종합적으로 고려하여 순위를 매겨주세요.
+
+        **출력 형식 규칙:**
+        - 반드시 JSON 형식으로 응답해야 합니다.
+        - JSON 객체는 'top_10_indices'라는 키를 가져야 합니다.
+        - 'top_10_indices'의 값은 당신이 선택한 가장 중요한 기사 10개의 '번호'를 담은 숫자 배열(array)이어야 합니다. 예: [3, 15, 4, ...].
+
+        [오늘의 뉴스 목록]
+        {news_context_for_selection}
+        """
+
+        response = model.generate_content(prompt)
+        # AI의 응답에서 JSON 부분만 추출
+        json_response_text = response.text.strip().replace("```json", "").replace("```", "")
+        selected_data = json.loads(json_response_text)
+        
+        selected_indices = selected_data.get('top_10_indices', [])
+        
+        # 선택된 인덱스에 해당하는 뉴스만 골라서 새로운 리스트를 만듭니다.
+        top_10_news = [news_list[i] for i in selected_indices if i < len(news_list)]
+
+        print(f"AI가 {len(top_10_news)}개의 Top 뉴스를 선별했습니다.")
+        return top_10_news
+
+    except Exception as e:
+        print(f"AI 뉴스 큐레이션 중 오류 발생: {e}")
+        # 오류 발생 시에도 시스템이 멈추지 않도록 그냥 앞 10개 뉴스를 반환
+        return news_list[:10]
+
 def get_news_from_rss():
     sent_links = set()
     try:
@@ -167,14 +222,25 @@ def send_email_oauth(receiver_email, subject, body):
 
 if __name__ == "__main__":
     RECEIVER_EMAIL = "rjh@ylp.co.kr"
-    news_data = get_news_from_rss()
-    if news_data:
-        ai_briefing_markdown = generate_ai_briefing(news_data)
+    
+    # 1. 일단 모든 뉴스를 수집합니다.
+    all_news_data = get_news_from_rss()
+    
+    if all_news_data:
+        # 2. AI를 사용해 Top 10 뉴스를 선별합니다.
+        top_news_data = select_top_news_with_ai(all_news_data)
+
+        # 3. 선별된 Top 10 뉴스를 바탕으로 AI 브리핑을 생성합니다.
+        ai_briefing_markdown = generate_ai_briefing(top_news_data)
         ai_briefing_html = markdown.markdown(ai_briefing_markdown) if ai_briefing_markdown else None
-        email_body = create_email_html(news_data, ai_briefing_html)
-        email_subject = f"[{datetime.now().strftime('%Y-%m-%d')}] 오늘의 AI/주식/머신러닝 뉴스"
+        
+        # 4. 최종 10개의 뉴스와 브리핑으로 이메일 본문을 만듭니다.
+        email_body = create_email_html(top_news_data, ai_briefing_html)
+        email_subject = f"[{datetime.now().strftime('%Y-%m-%d')}] 오늘의 AI/주식/머신러닝 Top 10 뉴스"
         send_email_oauth(RECEIVER_EMAIL, email_subject, email_body)
-        new_links_to_save = [news['link'] for news in news_data]
+        
+        # 5. 발송된 10개 뉴스의 링크만 기록합니다.
+        new_links_to_save = [news['link'] for news in top_news_data]
         update_sent_links(new_links_to_save)
     else:
         print("발송할 새로운 뉴스가 없습니다.")
