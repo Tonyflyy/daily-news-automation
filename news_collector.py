@@ -146,6 +146,7 @@ def get_news_from_rss():
                             'title': entry.title, 'link': entry.link,
                             'summary': summary_text[:150] + '...', 'image_url': image_url
                         }
+                        print(f"DEBUG: 수집된 뉴스 아이템: {news_item}")
                         found_news.append(news_item)
                         unique_links.add(entry.link)
                         break
@@ -210,6 +211,7 @@ if __name__ == "__main__":
 
 # (get_news_from_rss, update_sent_links, send_email_oauth 등 다른 함수는 기존과 동일합니다.)
 # (위 코드에서는 생략되었지만, 실제 파일에서는 그대로 유지해야 합니다.)
+
 
 
 
