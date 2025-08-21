@@ -153,46 +153,55 @@ def get_news_from_rss():
         print(f"총 {len(sent_links)}개의 보낸 기록을 sent_links.txt에서 불러왔습니다.")
     except FileNotFoundError:
         print("sent_links.txt 파일을 찾을 수 없어, 새로운 기록을 시작합니다.")
+    
+    # RSS 주소를 네이버 뉴스의 IT/과학, 경제 카테고리로 변경
     rss_feeds = [
-        'https://www.zdnet.co.kr/rss/all.xml', 'https://www.etnews.com/rss/all.xml',
-        'https://www.itworld.co.kr/rss', 'https://news.einfomax.co.kr/rss/clickTop.xml',
-        'https://www.hankyung.com/feed/it', 'https://www.bloter.net/rss',
-        'https://www.ciokorea.com/rss', 'https://rss.mt.co.kr/mt_all.xml',
-        'http://www.ddaily.co.kr/rss.xml'
+        'https://news.naver.com/main/rss.naver?sid1=105',  # IT/과학
+        'https://news.naver.com/main/rss.naver?sid1=101',  # 경제
     ]
+    
     found_news = []
     unique_links = set()
-    print("뉴스 수집을 시작합니다...")
+    print("네이버 뉴스 RSS를 통해 뉴스 수집을 시작합니다...")
     for url in rss_feeds:
         try:
             feed = feedparser.parse(url)
             for entry in feed.entries:
                 if entry.link in sent_links or entry.link in unique_links:
                     continue
-                search_text = entry.title + " " + entry.get('summary', '')
+                
+                # 네이버 뉴스는 요약(summary)이 매우 기므로, 본문 일부를 가져오는 것처럼 처리
+                summary_html = entry.get('summary', '요약 없음')
+                soup = BeautifulSoup(summary_html, 'lxml')
+                summary_text = soup.get_text(strip=True)
+                
+                # 키워드 필터링은 그대로 유지
                 keywords = [
                     '생성형 AI', 'LLM', 'Gemini', 'ChatGPT', '인공지능 윤리', 'AI 반도체',
                     '증시', '코스피', '나스닥', '반도체', '테마주', '금리', '실적 발표',
-                    '딥러닝', '강화학습', '데이터 과학', '컴퓨터 비전', '자연어 처리', 'NLP'
+                    '딥러닝', '강화학습', '데이터 과학', '컴퓨터 비전', '자연어 처리', 'NLP',
+                    '인공지능', '주식', '증시', '머신러닝'
                 ]
+                search_text = entry.title + " " + summary_text
+                
                 for keyword in keywords:
                     if keyword.lower() in search_text.lower():
-                        summary_html = entry.get('summary', '요약 없음')
-                        soup = BeautifulSoup(summary_html, 'lxml')
-                        summary_text = soup.get_text(strip=True)
                         image_url = get_image_from_url(entry.link)
                         news_item = {
-                            'title': entry.title, 'link': entry.link,
-                            'summary': summary_text[:150] + '...', 'image_url': image_url
+                            'title': entry.title,
+                            'link': entry.link,
+                            'summary': summary_text[:150] + '...',
+                            'image_url': image_url
                         }
-                        # print(f"DEBUG: 수집된 뉴스 아이템: {news_item}")
                         found_news.append(news_item)
                         unique_links.add(entry.link)
                         break
         except Exception as e:
             print(f"'{url}' 처리 중 오류 발생: {e}")
+
     print(f"총 {len(found_news)}개의 새로운 뉴스를 찾았습니다.")
     return found_news
+    
 
 # --- 이메일 생성 및 발송 함수 ---
 def create_email_html(news_list, ai_briefing):
@@ -240,5 +249,6 @@ if __name__ == "__main__":
         update_sent_links(new_links_to_save)
     else:
         print("발송할 새로운 뉴스가 없습니다.")
+
 
 
