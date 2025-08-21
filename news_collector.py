@@ -20,11 +20,10 @@ import requests # 웹 페이지 요청을 위해 추가
 
 def generate_ai_briefing(news_titles):
     """
-    뉴스 제목 목록을 잼민이 api에 보내 데일리 브리핑을 생성
+    뉴스 제목 목록을 Gemini API에 보내 데일리 브리핑을 생성합니다.
     """
     print("AI 브리핑 생성을 시작합니다...")
     try:
-        #환경 변수에서 API키를 가져옴
         api_key = os.getenv('GEMINI_API_KEY')
         if not api_key:
             print("GEMINI_API_KEY가 설정되지 않았습니다.")
@@ -32,7 +31,10 @@ def generate_ai_briefing(news_titles):
 
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel('gemini-pro')
-        #AI에게 역할을 부여하고 지시하는 프롬프트
+
+        titles_string = "\n- ".join(news_titles)
+
+        # 그 다음 f-string 안에서 변수를 사용합니다.
         prompt = f"""
         당신은 IT와 경제 뉴스를 분석하는 전문 뉴스 에디터입니다.
         아래는 오늘 수집된 주요 뉴스 제목 목록입니다.
@@ -40,7 +42,7 @@ def generate_ai_briefing(news_titles):
         독자들이 뉴스를 계속 읽고 싶게 만들어야 합니다. 격식 있고 전문적인 톤을 유지해주세요.
 
         [뉴스 제목 목록]
-        - {'\n- '.join(news_titles)}
+        - {titles_string}
         """
 
         response = model.generate_content(prompt)
@@ -208,5 +210,6 @@ if __name__ == "__main__":
 
 # (get_news_from_rss, update_sent_links, send_email_oauth 등 다른 함수는 기존과 동일합니다.)
 # (위 코드에서는 생략되었지만, 실제 파일에서는 그대로 유지해야 합니다.)
+
 
 
