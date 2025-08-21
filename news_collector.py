@@ -206,11 +206,13 @@ def get_news_from_naver_api():
         "X-Naver-Client-Id": client_id,
         "X-Naver-Client-Secret": client_secret,
     }
-    # API는 하루치 검색(date)을 지원하지 않으므로, 최신순(sim)으로 100개를 요청하여 필터링
-    url = f"https://openapi.naver.com/v1/search/news.json?query={quote(query)}&display=100&sort=sim"
+
+    # --- 이 부분이 수정되었습니다: sort=sim -> sort=date ---
+    url = f"https://openapi.naver.com/v1/search/news.json?query={quote(query)}&display=100&sort=date"
+    # --- 여기까지 ---
 
     found_news = []
-    print("네이버 검색 API를 통해 뉴스 수집을 시작합니다...")
+    print("네이버 검색 API를 통해 '최신순'으로 뉴스 수집을 시작합니다...")
     try:
         response = requests.get(url, headers=headers)
         response.raise_for_status()
@@ -218,15 +220,13 @@ def get_news_from_naver_api():
         articles = data.get('items', [])
 
         for article in articles:
-            # 네이버 뉴스가 아닌 링크(예: 연예뉴스)는 건너뛰기
             if "n.news.naver.com" not in article['link']:
                 continue
             
-            link = article['originallink'] # 원본 기사 링크
+            link = article['originallink']
             if link in sent_links:
                 continue
 
-            # API가 돌려주는 HTML 태그(<b>)를 제거
             soup_title = BeautifulSoup(article['title'], 'html.parser')
             clean_title = soup_title.get_text(strip=True)
             soup_desc = BeautifulSoup(article['description'], 'html.parser')
@@ -295,6 +295,7 @@ if __name__ == "__main__":
         update_sent_links(new_links_to_save)
     else:
         print("발송할 새로운 뉴스가 없습니다.")
+
 
 
 
