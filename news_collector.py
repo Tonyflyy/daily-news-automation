@@ -42,13 +42,16 @@ def generate_ai_briefing(news_list):
 
         # AI에게 더 구체적인 역할을 부여하는 프롬프트
         prompt = f"""
-        당신은 예리한 통찰력을 가진 IT 및 경제 전문 애널리스트입니다.
-        아래는 오늘 수집된 주요 뉴스의 제목과 요약 목록입니다.
+        당신은 탁월한 통찰력을 가진 IT/경제 뉴스 큐레이터입니다.
+        아래 뉴스 목록을 분석하여, 독자를 위한 매우 읽기 쉬운 '데일리 브리핑'을 작성해주세요.
 
-        당신의 임무는 이 기사들을 종합적으로 분석하여, 그 안에 숨겨진 핵심 트렌드나 오늘 가장 중요한 사건을 파악하는 것입니다.
-        단순히 주제를 나열하지 말고, 여러 기사에 걸쳐 나타나는 공통된 주제나 인과 관계를 엮어서 하나의 흥미로운 이야기로 만들어주세요.
-        이 분석을 바탕으로, 뉴스레터 최상단에 들어갈 2~3 문장의 '에디터 브리핑'을 작성해주세요.
-        독자들이 본문을 꼭 읽고 싶게 만드는 전문적이면서도 흥미로운 글이어야 합니다.
+        **출력 형식 규칙:**
+        1. 전체 글은 두 부분으로 구성됩니다: '에디터 브리핑'과 '주요 뉴스 분석'.
+        2. '에디터 브리핑'은 '## 에디터 브리핑' 헤더로 시작하며, 오늘 뉴스의 핵심을 2~3 문장으로 요약합니다.
+        3. '주요 뉴스 분석'은 '## 주요 뉴스 분석' 헤더로 시작합니다.
+        4. 주요 뉴스 분석에서는 가장 중요한 뉴스 카테고리 2~3개를 '###' 헤더로 구분해주세요 (예: '### 생성형 AI의 확산과 영향').
+        5. 각 카테고리 안에서는 관련된 뉴스들을 글머리 기호(`*`)를 사용해 나열하고, 핵심 키워드는 **굵은 글씨**로 강조해주세요.
+        6. 전체적으로 전문적인 톤을 유지하면서도, 문단 구분을 명확하게 하여 가독성을 극대화해주세요.
 
         [오늘의 뉴스 목록]
         {news_context}
@@ -202,9 +205,13 @@ if __name__ == "__main__":
     RECEIVER_EMAIL = "rjh@ylp.co.kr"
     news_data = get_news_from_rss()
     if news_data:
-        ai_briefing = generate_ai_briefing(news_data)
+        # 1. AI가 마크다운 형식으로 브리핑 생성
+        ai_briefing_markdown = generate_ai_briefing(news_data)
+        # 2. 마크다운을 HTML로 변환
+        ai_briefing_html = markdown.markdown(ai_briefing_markdown) if ai_briefing_markdown else None
+        # 3. HTML로 변환된 브리핑을 이메일 본문에 전달
+        email_body = create_email_html(news_data, ai_briefing_html)
         
-        email_body = create_email_html(news_data, ai_briefing)
         email_subject = f"[{datetime.now().strftime('%Y-%m-%d')}] 오늘의 AI/주식/머신러닝 뉴스"
         send_email_oauth(RECEIVER_EMAIL, email_subject, email_body)
         
@@ -215,6 +222,7 @@ if __name__ == "__main__":
 
 # (get_news_from_rss, update_sent_links, send_email_oauth 등 다른 함수는 기존과 동일합니다.)
 # (위 코드에서는 생략되었지만, 실제 파일에서는 그대로 유지해야 합니다.)
+
 
 
 
