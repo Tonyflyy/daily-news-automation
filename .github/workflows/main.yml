@@ -39,3 +39,17 @@ jobs:
 
     - name: Run script to send email
       run: python news_collector.py
+
+
+    - name: Configure Git
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+    - name: Commit and push sent_links.txt
+      run: |
+        git pull
+        git add sent_links.txt
+        # 변경 사항이 있을 때만 커밋하고 푸시합니다.
+        git diff-index --quiet HEAD || (git commit -m "Update sent links history" && git push)
+      
