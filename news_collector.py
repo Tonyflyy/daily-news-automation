@@ -50,8 +50,7 @@ def generate_ai_briefing(news_list):
         print(f"AI 브리핑 생성 중 오류 발생: {e}")
         return None
 
-# --- 이미지 주소 추출 함수 (page_url 버그 수정) ---
-# <<<<<<<<<<<<<<<<<<<< 2번 문제 해결: 올바른 함수로 교체
+
 def get_image_from_url(page_url):
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
@@ -82,7 +81,61 @@ def update_sent_links(links):
     except Exception as e:
         print(f"sent_links.txt 파일 업데이트 중 오류 발생: {e}")
 
-# --- 뉴스 수집 함수 ---
+
+def get_news_from_api():
+    sent_links = set()
+    try:
+        with open('sent_links.txt', 'r', encoding='utf-8') as f:
+            sent_links = set(line.strip() for line in f)
+        print(f"총 {len(sent_links)}개의 보낸 기록을 sent_links.txt에서 불러왔습니다.")
+    except FileNotFoundError:
+        print("sent_links.txt 파일을 찾을 수 없어, 새로운 기록을 시작합니다.")
+    
+    api_key = os.getenv('GNEWS_API_KEY')
+    if not api_key:
+        print("GNEWS_API_KEY가 설정되지 않았습니다.")
+        return []
+
+    # 검색할 키워드를 OR로 묶어 하나의 쿼리로 만듭니다.
+    query = "AI OR 주식 OR 머신러닝"
+    # GNews API 엔드포인트 URL
+    url = (f'https://gnews.io/api/v4/search?'
+           f'q="{query}"&'
+           f'lang=ko&'      # 한국어 뉴스만 검색
+           f'country=kr&'   # 대한민국 뉴스로 제한
+           f'max=15&'       # 최대 15개 기사 요청
+           f'apikey={api_key}')
+    
+    found_news = []
+    print("GNews API를 통해 뉴스 수집을 시작합니다...")
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        data = response.json()
+        articles = data.get('articles', [])
+
+        for article in articles:
+            link = article['url']
+            # 중복 링크 확인
+            if link in sent_links:
+                continue
+            
+            # GNews API 결과와 우리 기존 데이터 형식을 맞춰줍니다.
+            image_url = get_image_from_url(link)
+            news_item = {
+                'title': article['title'],
+                'link': link,
+                'summary': article['description'][:150] + '...' if article.get('description') else '',
+                'image_url': image_url
+            }
+            found_news.append(news_item)
+
+    except Exception as e:
+        print(f"GNews API 요청 중 오류 발생: {e}")
+
+    print(f"총 {len(found_news)}개의 새로운 뉴스를 찾았습니다.")
+    return found_news
+
 def get_news_from_rss():
     sent_links = set()
     try:
@@ -167,7 +220,7 @@ def send_email_oauth(receiver_email, subject, body):
 # --- 메인 실행 ---
 if __name__ == "__main__":
     RECEIVER_EMAIL = "rjh@ylp.co.kr"
-    news_data = get_news_from_rss()
+    news_data = get_news_from_api()
     if news_data:
         ai_briefing_markdown = generate_ai_briefing(news_data)
         ai_briefing_html = markdown.markdown(ai_briefing_markdown) if ai_briefing_markdown else None
@@ -178,3 +231,4 @@ if __name__ == "__main__":
         update_sent_links(new_links_to_save)
     else:
         print("발송할 새로운 뉴스가 없습니다.")
+
