@@ -41,7 +41,6 @@ jobs:
     - name: Run script to send email
       env:
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        GNEWS_API_KEY: ${{ secrets.GNEWS_API_KEY }}
       run: python news_collector.py
 
 
