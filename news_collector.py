@@ -146,59 +146,41 @@ def get_news_from_api():
     return found_news
 
 def get_news_from_rss():
-    sent_links = set()
-    try:
-        with open('sent_links.txt', 'r', encoding='utf-8') as f:
-            sent_links = set(line.strip() for line in f)
-        print(f"총 {len(sent_links)}개의 보낸 기록을 sent_links.txt에서 불러왔습니다.")
-    except FileNotFoundError:
-        print("sent_links.txt 파일을 찾을 수 없어, 새로운 기록을 시작합니다.")
-    
     rss_feeds = [
         'https://news.naver.com/main/rss.naver?sid1=105',  # IT/과학
         'https://news.naver.com/main/rss.naver?sid1=101',  # 경제
     ]
     
-    found_news = []
-    unique_links = set()
-    print("네이버 뉴스 RSS를 통해 뉴스 수집을 시작합니다...")
+    print("--- [최종 디버깅 모드] ---")
+    print("RSS 피드에서 각 피드별 첫 3개 기사의 실제 내용을 확인합니다.")
+
     for url in rss_feeds:
+        print(f"\n\n--- 피드 주소: {url} ---")
         try:
             feed = feedparser.parse(url, agent='Mozilla/5.0')
+            
+            if not feed.entries:
+                print(">> 이 피드에서 기사를 찾지 못했습니다. 피드가 비어있거나 차단되었을 수 있습니다.")
+                continue
 
-            for entry in feed.entries:
-                if entry.link in sent_links or entry.link in unique_links:
-                    continue
-                
+            # 각 피드의 첫 3개 기사만 확인
+            for i, entry in enumerate(feed.entries[:3]):
                 summary_html = entry.get('summary', '요약 없음')
                 soup = BeautifulSoup(summary_html, 'lxml')
                 summary_text = soup.get_text(strip=True)
                 
-                keywords = [
-                    'AI', '인공지능', '머신러닝', '딥러닝', 'LLM', '생성형', 'ChatGPT', 'Gemini', 
-                    'AI반도체', 'HBM', 'CXL', '주식', '증시', '코스피', '나스닥', '금리', 
-                    '환율', '실적', '투자', 'M&A', '삼성전자', 'SK하이닉스', '엔비디아', 
-                    '네이버', '카카오', '구글', '애플', 'MS', '클라우드', '데이터', '빅데이터'
-                ]
                 search_text = entry.title + " " + summary_text
                 
-                for keyword in keywords:
-                    if keyword.lower() in search_text.lower():
-                        image_url = get_image_from_url(entry.link)
-                        news_item = {
-                            'title': entry.title,
-                            'link': entry.link,
-                            'summary': summary_text[:150] + '...',
-                            'image_url': image_url
-                        }
-                        found_news.append(news_item)
-                        unique_links.add(entry.link)
-                        break
+                print(f"\n--- 기사 #{i+1} ---")
+                print(f"제목: {entry.title}")
+                print(f"검색 대상 텍스트 (앞 300자): {search_text[:300]}...")
+        
         except Exception as e:
-            print(f"'{url}' 처리 중 오류 발생: {e}")
-
-    print(f"총 {len(found_news)}개의 새로운 뉴스를 찾았습니다.")
-    return found_news
+            print(f"'{url}' 피드 처리 중 심각한 오류 발생: {e}")
+    
+    print("\n--- [디버깅 완료] ---")
+    # 디버깅 중에는 이메일을 보내지 않도록 의도적으로 빈 리스트를 반환합니다.
+    return []
     
 
 # --- 이메일 생성 및 발송 함수 ---
@@ -248,6 +230,7 @@ if __name__ == "__main__":
         update_sent_links(new_links_to_save)
     else:
         print("발송할 새로운 뉴스가 없습니다.")
+
 
 
 
