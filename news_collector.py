@@ -1,6 +1,7 @@
 import os
 import base64
 import markdown
+import json
 from email.mime.text import MIMEText
 from urllib.parse import urljoin, urlparse
 from google.auth.transport.requests import Request
@@ -221,13 +222,64 @@ def send_email_oauth(sender_email, receiver_emails, subject, body):
     except HttpError as error:
         print(f"이메일 발송 중 오류 발생: {error}")
 
-if __name__ == "__main__":
-    # Secret에서 수신자 목록을 불러옵니다.
-    recipients_str = os.getenv('RECIPIENT_LIST', 'rjh@ylp.co.kr')
-    # 쉼표로 구분된 문자열을 이메일 주소 리스트로 변환합니다.
-    recipient_list = [email.strip() for email in recipients_str.split(',')]
+# --- 새로 추가된 슬랙 메시지 발송 함수 ---
+def send_to_slack(webhook_url, news_list, ai_briefing):
+    """
+    뉴스레터 내용을 Slack의 Block Kit 형식으로 만들어 Webhook으로 전송합니다.
+    """
+    if not webhook_url:
+        print("슬랙 Webhook URL이 설정되지 않았습니다.")
+        return
+
+    print("슬랙으로 뉴스레터 발송을 시작합니다...")
     
-    SENDER_EMAIL = "zzzfbwnsgh@gmail.com" # 발신자 이메일 주소
+    # 슬랙 메시지 헤더
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    header_text = f"📰 오늘의 AI/주식/머신러닝 Top {len(news_list)} 뉴스 ({today_str})"
+    
+    # 슬랙 메시지 본문(블록) 구성
+    blocks = [
+        {"type": "header", "text": {"type": "plain_text", "text": header_text, "emoji": True}},
+    ]
+    
+    # AI 브리핑이 있으면 추가
+    if ai_briefing:
+        blocks.append({"type": "section", "text": {"type": "mrkdwn", "text": f"*🤖 오늘의 브리핑*\n{ai_briefing}"}})
+        blocks.append({"type": "divider"})
+
+    # 뉴스 목록 추가
+    for news in news_list:
+        news_block = {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": f"*<{news['link']}|{news['title']}>*\n{news['summary']}"
+            }
+        }
+        # 이미지가 있으면 썸네일로 추가
+        if news.get('image_url'):
+            news_block["accessory"] = {
+                "type": "image",
+                "image_url": news['image_url'],
+                "alt_text": "Article thumbnail"
+            }
+        blocks.append(news_block)
+        blocks.append({"type": "divider"})
+
+    payload = {"blocks": blocks}
+
+    try:
+        response = requests.post(webhook_url, data=json.dumps(payload), headers={'Content-Type': 'application/json'})
+        response.raise_for_status()
+        print("슬랙 메시지 발송 성공!")
+    except Exception as e:
+        print(f"슬랙 메시지 발송 중 오류 발생: {e}")
+
+if __name__ == "__main__":
+    recipients_str = os.getenv('RECIPIENT_LIST', 'rjh@ylp.co.kr')
+    recipient_list = [email.strip() for email in recipients_str.split(',')]
+    SENDER_EMAIL = "zzzfbwnsgh@gmail.com"
+    SLACK_WEBHOOK_URL = os.getenv('SLACK_WEBHOOK_URL') # 슬랙 URL 불러오기
     
     # 1. 일단 모든 뉴스를 수집합니다.
     all_news_data = get_news_from_rss()
@@ -244,10 +296,14 @@ if __name__ == "__main__":
         email_body = create_email_html(top_news_data, ai_briefing_html)
         email_subject = f"[{datetime.now().strftime('%Y-%m-%d')}] 오늘의 AI/주식/머신러닝 Top 10 뉴스"
         send_email_oauth(SENDER_EMAIL, recipient_list, email_subject, email_body)
+
+        # 슬랙 발송 (마크다운 원본을 전달)
+        send_to_slack(SLACK_WEBHOOK_URL, top_news_data, ai_briefing_markdown)
         
         # 5. 발송된 10개 뉴스의 링크만 기록합니다.
         new_links_to_save = [news['link'] for news in top_news_data]
         update_sent_links(new_links_to_save)
     else:
         print("발송할 새로운 뉴스가 없습니다.")
+
 
