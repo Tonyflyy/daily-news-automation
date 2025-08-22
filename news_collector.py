@@ -214,7 +214,7 @@ def get_news_from_rss():
     print(f"총 {len(found_news)}개의 새로운 뉴스를 찾았습니다.")
     return found_news
 
-def create_email_html(news_list, ai_briefing, today_data_str):
+def create_email_html(news_list, ai_briefing, today_date_str):
     env = Environment(loader=FileSystemLoader('.'))
     template = env.get_template('email_template.html')
     #today_date = datetime.now().strftime("%Y-%m-%d")
@@ -333,6 +333,7 @@ if __name__ == "__main__":
         update_sent_links(new_links_to_save)
     else:
         print("발송할 새로운 뉴스가 없습니다.")
+
 
 
 
