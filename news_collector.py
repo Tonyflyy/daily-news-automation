@@ -259,7 +259,7 @@ def send_to_slack(webhook_url, news_list, ai_briefing, today_date_str):
     
     # 슬랙 메시지 헤더
     #today_str = datetime.now().strftime("%Y-%m-%d")
-     header_text = f"📰 오늘의 AI/주식/머신러닝 Top {len(news_list)} 뉴스 ({today_date_str})"
+    header_text = f"📰 오늘의 AI/주식/머신러닝 Top {len(news_list)} 뉴스 ({today_date_str})"
     
     # 슬랙 메시지 본문(블록) 구성
     blocks = [
@@ -322,7 +322,7 @@ if __name__ == "__main__":
         
         # 4. 최종 10개의 뉴스와 브리핑으로 이메일 본문을 만듭니다.
         email_body = create_email_html(top_news_data, ai_briefing_html, kst_today_str)
-        email_subject = f"[{datetime.now().strftime('%Y-%m-%d')}] 오늘의 AI/주식/머신러닝 Top 10 뉴스"
+        email_subject = f"[{kst_today_str}] 오늘의 AI/주식/머신러닝 Top 10 뉴스"
         send_email_oauth(SENDER_EMAIL, recipient_list, email_subject, email_body)
 
         # 슬랙 발송 (마크다운 원본을 전달)
@@ -333,6 +333,7 @@ if __name__ == "__main__":
         update_sent_links(new_links_to_save)
     else:
         print("발송할 새로운 뉴스가 없습니다.")
+
 
 
 
