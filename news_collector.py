@@ -326,13 +326,14 @@ if __name__ == "__main__":
         send_email_oauth(SENDER_EMAIL, recipient_list, email_subject, email_body)
 
         # 슬랙 발송 (마크다운 원본을 전달)
-        #send_to_slack(SLACK_WEBHOOK_URL, top_news_data, ai_briefing_markdown, kst_today_str)
+        send_to_slack(SLACK_WEBHOOK_URL, top_news_data, ai_briefing_markdown, kst_today_str)
         
         # 5. 발송된 10개 뉴스의 링크만 기록합니다.
         new_links_to_save = [news['link'] for news in top_news_data]
         update_sent_links(new_links_to_save)
     else:
         print("발송할 새로운 뉴스가 없습니다.")
+
 
 
 
