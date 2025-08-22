@@ -14,6 +14,7 @@ import feedparser
 from bs4 import BeautifulSoup
 from jinja2 import Environment, FileSystemLoader
 from datetime import datetime
+from zoneinfo import ZoneInfo
 import requests
 
 def generate_ai_briefing(news_list):
@@ -213,11 +214,11 @@ def get_news_from_rss():
     print(f"총 {len(found_news)}개의 새로운 뉴스를 찾았습니다.")
     return found_news
 
-def create_email_html(news_list, ai_briefing):
+def create_email_html(news_list, ai_briefing, today_data_str):
     env = Environment(loader=FileSystemLoader('.'))
     template = env.get_template('email_template.html')
-    today_date = datetime.now().strftime("%Y-%m-%d")
-    return template.render(news_list=news_list, today_date=today_date, ai_briefing=ai_briefing)
+    #today_date = datetime.now().strftime("%Y-%m-%d")
+    return template.render(news_list=news_list, today_date=today_date_str, ai_briefing=ai_briefing)
 
 def send_email_oauth(sender_email, receiver_emails, subject, body):
     SCOPES = ['https://www.googleapis.com/auth/gmail.send']
@@ -246,7 +247,7 @@ def send_email_oauth(sender_email, receiver_emails, subject, body):
         print(f"이메일 발송 중 오류 발생: {error}")
 
 # --- 새로 추가된 슬랙 메시지 발송 함수 ---
-def send_to_slack(webhook_url, news_list, ai_briefing):
+def send_to_slack(webhook_url, news_list, ai_briefing, today_date_str):
     """
     뉴스레터 내용을 Slack의 Block Kit 형식으로 만들어 Webhook으로 전송합니다.
     """
@@ -257,8 +258,8 @@ def send_to_slack(webhook_url, news_list, ai_briefing):
     print("슬랙으로 뉴스레터 발송을 시작합니다...")
     
     # 슬랙 메시지 헤더
-    today_str = datetime.now().strftime("%Y-%m-%d")
-    header_text = f"📰 오늘의 AI/주식/머신러닝 Top {len(news_list)} 뉴스 ({today_str})"
+    #today_str = datetime.now().strftime("%Y-%m-%d")
+     header_text = f"📰 오늘의 AI/주식/머신러닝 Top {len(news_list)} 뉴스 ({today_date_str})"
     
     # 슬랙 메시지 본문(블록) 구성
     blocks = [
@@ -303,7 +304,11 @@ if __name__ == "__main__":
     recipient_list = [email.strip() for email in recipients_str.split(',')]
     SENDER_EMAIL = "zzzfbwnsgh@gmail.com"
     SLACK_WEBHOOK_URL = os.getenv('SLACK_WEBHOOK_URL') # 슬랙 URL 불러오기
-    
+    utc_now = datetime.now(ZoneInfo('UTC'))
+    kst_now = utc_now.astimezone(ZoneInfo('Asia/Seoul'))
+    kst_today_str = kst_now.strftime("%Y-%m-%d")
+
+
     # 1. 일단 모든 뉴스를 수집합니다.
     all_news_data = get_news_from_rss()
     
@@ -316,18 +321,19 @@ if __name__ == "__main__":
         ai_briefing_html = markdown.markdown(ai_briefing_markdown) if ai_briefing_markdown else None
         
         # 4. 최종 10개의 뉴스와 브리핑으로 이메일 본문을 만듭니다.
-        email_body = create_email_html(top_news_data, ai_briefing_html)
+        email_body = create_email_html(top_news_data, ai_briefing_html, kst_today_str)
         email_subject = f"[{datetime.now().strftime('%Y-%m-%d')}] 오늘의 AI/주식/머신러닝 Top 10 뉴스"
         send_email_oauth(SENDER_EMAIL, recipient_list, email_subject, email_body)
 
         # 슬랙 발송 (마크다운 원본을 전달)
-        send_to_slack(SLACK_WEBHOOK_URL, top_news_data, ai_briefing_markdown)
+        #send_to_slack(SLACK_WEBHOOK_URL, top_news_data, ai_briefing_markdown, kst_today_str)
         
         # 5. 발송된 10개 뉴스의 링크만 기록합니다.
         new_links_to_save = [news['link'] for news in top_news_data]
         update_sent_links(new_links_to_save)
     else:
         print("발송할 새로운 뉴스가 없습니다.")
+
 
 
 
