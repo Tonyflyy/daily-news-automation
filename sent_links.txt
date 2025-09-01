@@ -129,3 +129,13 @@ https://www.ddaily.co.kr/page/view/2025082912484433142
 https://www.ddaily.co.kr/page/view/2025082910521843998
 https://www.chosun.com/economy/tech_it/2025/09/01/37ZV3NVNHXQ2OY52ZFE4UVZJJ4/
 https://www.donga.com/news/Politics/article/all/20250901/132290871/2
+https://www.cio.com/article/4048854/ms-%ec%b2%ab-%ec%9e%90%ec%b2%b4-%ea%b0%9c%eb%b0%9c-ai-%eb%aa%a8%eb%8d%b8-mai-%ea%b3%b5%ea%b0%9c%c2%b7%c2%b7%c2%b7-%ec%9d%bc%eb%b6%80-%ec%bd%94%ed%8c%8c%ec%9d%bc%eb%9f%bf-%ec%84%9c%eb%b9%84.html
+https://www.itworld.co.kr/article/4048680/%eb%b6%81%ed%95%9c-%ed%95%b4%ec%bb%a4-%ec%a7%91%eb%8b%a8-320%ea%b3%b3-%ea%b8%b0%ec%97%85%ec%97%90-%ec%9c%84%ec%9e%a5-%ec%b7%a8%ec%97%85-%ed%81%ac%eb%9d%bc%ec%9a%b0%eb%93%9c%ec%8a%a4.html
+https://www.cio.com/article/4048688/%eb%b6%81%ed%95%9c-%ed%95%b4%ec%bb%a4-%ec%a7%91%eb%8b%a8-ai-%ec%95%85%ec%9a%a9%ed%95%b4-320%ea%b3%b3-%ea%b8%b0%ec%97%85-%ec%9e%a0%ec%9e%85%ed%81%ac%eb%9d%bc%ec%9a%b0%eb%93%9c%ec%8a%a4.html
+https://www.itworld.co.kr/article/4048725/%eb%b3%b4%ec%95%88-%eb%a6%ac%eb%8d%94-%ea%b3%b5%eb%b0%b1-%ec%82%ac%ed%83%9c-ciso-%ed%9b%84%ea%b3%84-%ea%b3%84%ed%9a%8d-%ec%97%86%eb%8a%94-%ea%b8%b0%ec%97%85%ec%9d%98-%ec%9c%84.html
+https://www.cio.com/article/4048892/%ea%b8%88%ec%a0%84-%eb%aa%a9%ec%a0%81-%eb%84%98%ec%96%b4%ec%84%9c%eb%8a%94-%ec%a4%91%c2%b7%c2%b7%c2%b7-%ec%a0%84%eb%ac%b8%ea%b0%80%eb%93%a4%ec%9d%b4-%eb%b3%b8-%ec%82%ac%ec%9d%b4%eb%b2%84-%eb%b2%94.html
+https://www.cio.com/article/4048881/13%ea%b0%9c%ea%b5%ad-%ec%a0%95%eb%b3%b4-%ea%b8%b0%ea%b4%80-%ec%a4%91%ea%b5%ad-%ed%95%b4%ec%bb%a4%ec%a1%b0%ec%a7%81-%ec%86%94%ed%8a%b8-%ed%83%80%ec%9d%b4%ed%91%bc-%ed%99%95%ec%82%b0-%ea%b2%bd.html
+https://www.itworld.co.kr/article/4048048/%ec%9b%8c%ed%81%ac%eb%8d%b0%ec%9d%b4-2026%ed%9a%8c%ea%b3%84%ec%97%b0%eb%8f%84-2%eb%b6%84%ea%b8%b0-%eb%a7%a4%ec%b6%9c-23%ec%96%b54800%eb%a7%8c-%eb%8b%ac%eb%9f%ac.html
+https://www.itworld.co.kr/article/4048848/%ea%b5%ac%ea%b8%80%ed%81%b4%eb%9d%bc%ec%9a%b0%eb%93%9c-%eb%a4%bc%ed%8a%bc%ea%b3%bc-%ec%a0%84%eb%9e%b5%ec%a0%81-ai-%ed%8c%8c%ed%8a%b8%eb%84%88%ec%8b%ad-%ea%b0%95%ed%99%94-%eb%b0%9c%ed%91%9c.html
+https://www.cio.com/article/4048824/%ea%b5%ac%ea%b8%80%ed%81%b4%eb%9d%bc%ec%9a%b0%eb%93%9c-%eb%a4%bc%ed%8a%bc-%ec%a0%84%eb%9e%b5%ec%a0%81-ai-%ed%8c%8c%ed%8a%b8%eb%84%88%ec%8b%ad-%ea%b0%95%ed%99%94%c2%b7%c2%b7%c2%b7-%ec%b1%84%ed%8c%85.html
+https://www.itworld.co.kr/article/4048711/%ec%83%9d%ec%84%b1%ed%98%95-ai-%ea%b0%9c%eb%b0%9c-%eb%8f%84%ec%9a%b0%eb%af%b8-%ec%9d%b4%ec%a0%9c%eb%8a%94-%ec%a0%84%eb%9e%b5%ec%a0%81-%ec%98%88%ec%82%b0-%ed%95%ad%eb%aa%a9.html
