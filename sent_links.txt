@@ -229,3 +229,13 @@ https://www.itworld.co.kr/article/4054309/%eb%b8%8c%eb%a1%9c%eb%93%9c%ec%bb%b4%e
 https://www.itworld.co.kr/article/4054231/%ec%95%84%ec%9d%b4%ed%8f%b0-17-%ed%94%84%eb%a1%9c-%ea%b3%b5%ea%b0%9c%ed%94%8c%eb%9e%98%ea%b7%b8%ec%8b%ad-%ec%8a%a4%eb%a7%88%ed%8a%b8%ed%8f%b0%ec%9d%98-%ea%b8%b0%ec%a4%80%ec%9d%84-%eb%86%92.html
 https://www.ddaily.co.kr/page/view/2025091016594668860
 https://www.ddaily.co.kr/page/view/2025091012085327207
+https://www.cio.com/article/4055484/%ed%99%8d%ed%95%b4-%ed%95%b4%ec%a0%80%ec%bc%80%ec%9d%b4%eb%b8%94-%ec%a0%88%eb%8b%a8-%ec%95%84%ec%8b%9c%ec%95%84%c2%b7%ec%a4%91%eb%8f%99-%ed%81%b4%eb%9d%bc%ec%9a%b0%eb%93%9c-%ec%84%9c%eb%b9%84.html
+https://www.cio.com/article/4055482/%ec%97%94%eb%b9%84%eb%94%94%ec%95%84-ai-%ec%b6%94%eb%a1%a0%c2%b7%eb%8c%80%ea%b7%9c%eb%aa%a8-%ec%9b%8c%ed%81%ac%eb%a1%9c%eb%93%9c%ec%9a%a9-%ec%8b%a0%ea%b7%9c-gpu-%eb%a3%a8%eb%b9%88-cpx.html
+https://www.itworld.co.kr/article/4055374/%ec%83%9d%ec%84%b1%ed%98%95-ai-%ea%b8%b0%eb%8a%a5-2029%eb%85%84%ea%b9%8c%ec%a7%80-%ed%94%84%eb%a6%ac%eb%af%b8%ec%97%84-%ec%8a%a4%eb%a7%88%ed%8a%b8%ed%8f%b0-100%ec%97%90-%ed%83%91%ec%9e%ac.html
+https://www.cio.com/article/4055352/2029%eb%85%84%ea%b9%8c%ec%a7%80-%ed%94%84%eb%a6%ac%eb%af%b8%ec%97%84-%ec%8a%a4%eb%a7%88%ed%8a%b8%ed%8f%b0-100%ea%b0%80-%ec%83%9d%ec%84%b1%ed%98%95-ai-%ea%b8%b0%eb%8a%a5-%ed%83%91%ec%9e%ac.html
+https://www.itworld.co.kr/article/4055225/%ec%b1%97gpt-%eb%8c%80%ec%8b%a0%ed%95%a0-%ec%b9%b4%eb%93%9c-%eb%a7%88%ec%9d%b4%ed%81%ac%eb%a1%9c%ec%86%8c%ed%94%84%ed%8a%b8-%ec%9e%90%ec%b2%b4-%ea%b0%9c%eb%b0%9c-llm%ec%9d%98.html
+https://www.cio.com/article/4055407/%eb%b2%a4%eb%8d%94-%ec%a2%85%ec%86%8d-%ec%9c%84%ed%97%98%ec%97%90-%eb%8c%80%ec%9d%91%c2%b7%c2%b7%c2%b7-ms-%ec%98%a4%ed%94%bc%ec%8a%a4-365%ec%97%90-%ec%95%a4%ed%8a%b8%eb%a1%9c%ed%94%bd-ai-%eb%8f%84.html
+https://www.itworld.co.kr/article/4054270/%ec%97%ad%eb%8c%80-%ea%b0%80%ec%9e%a5-%ec%96%87%ec%9d%80-%ec%95%84%ec%9d%b4%ed%8f%b0-%ec%95%84%ec%9d%b4%ed%8f%b0-%ec%97%90%ec%96%b4%ec%9d%98-3%ea%b0%80%ec%a7%80-%eb%ac%b8%ec%a0%9c%ec%a0%90.html
+https://www.itworld.co.kr/article/4054261/%eb%8d%94-%ec%9d%b4%ec%83%81-%eb%b3%b4%ea%b8%89%ed%98%95-%ec%95%84%eb%83%90%ec%95%84%ec%9d%b4%ed%8f%b0-17-%ec%83%81%ec%9c%84%ea%b8%89-%ea%b8%b0%eb%8a%a5-5%ea%b0%80%ec%a7%80-%ec%a0%84.html
+https://www.itworld.co.kr/article/4054239/%ec%95%a0%ed%94%8c%ec%9b%8c%ec%b9%98-se-3-%ea%b3%a0%ea%b8%89-%ea%b8%b0%eb%8a%a5-%eb%8c%80%ea%b1%b0-%ed%83%91%ec%9e%ac%ec%8b%9c%eb%a6%ac%ec%a6%88-11%eb%b3%b4%eb%8b%a4-%eb%8d%94-%ec%a3%bc.html
+https://www.ddaily.co.kr/page/view/2025091117385741922
