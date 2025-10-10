@@ -519,3 +519,13 @@ https://www.cio.com/article/4069089/7-cost-optimization-pitfalls-to-avoid.html
 https://www.cio.com/article/221699/7-change-management-certifications-to-boost-your-it-career.html
 https://www.cio.com/article/4068537/what-led-cbre-to-roll-key-functions-into-one-role.html
 https://www.cio.com/article/4069869/ecco-come-i-cio-possono-creare-sinergie-tra-modernizzazione-e-infrastrutture-legacy.html
+https://www.itworld.co.kr/article/4070589/%ec%8b%9c%eb%a6%ac-%eb%b6%80%ed%99%9c%ec%97%90-%eb%82%98%ec%84%a0-%ec%95%a0%ed%94%8c-ai%c2%b7ios-%ed%98%81%ec%8b%a0%ec%9c%bc%eb%a1%9c-14%eb%85%84-%eb%a7%8c%ec%9d%98-%eb%b0%98%ec%a0%84-%eb%85%b8.html
+https://www.itworld.co.kr/article/4070579/%ec%9d%b8%ed%85%94-%ec%b0%a8%ec%84%b8%eb%8c%80-%ec%bd%94%ec%96%b4-%ec%9a%b8%ed%8a%b8%eb%9d%bc-%ec%8b%9c%eb%a6%ac%ec%a6%88-3-%ed%8c%ac%ec%84%9c-%eb%a0%88%ec%9d%b4%ed%81%ac-%ea%b3%b5%ea%b0%9c.html
+https://www.itworld.co.kr/article/4070577/ai-%ec%97%90%ec%9d%b4%ec%a0%84%ed%8a%b8-%eb%b9%84%ea%b8%b0%eb%8a%a5-%ec%9a%94%ea%b5%ac%ec%82%ac%ed%95%ad-%ec%96%b4%eb%96%bb%ea%b2%8c-%ec%84%a4%ea%b3%84%ed%95%b4%ec%95%bc-%ed%95%98%eb%8a%94%ea%b0%80.html
+https://www.itworld.co.kr/article/4070572/ai-%ec%8b%9c%eb%8c%80-%ec%b5%9c%eb%8c%80-%ea%b3%b5%ea%b8%89%eb%a7%9d-%eb%b3%91%eb%aa%a9%ec%9d%80-%ec%82%ac%eb%9e%8c.html
+https://www.itworld.co.kr/article/4070565/%ec%9a%b4%ec%98%81-%ec%9b%8c%ed%81%ac%ed%94%8c%eb%a1%9c-%ec%9e%ac%ed%8e%b8%ed%95%98%eb%8a%94-%ec%9e%90%ea%b8%b0-%ed%95%99%ec%8a%b5%ed%98%95-%ec%9d%b8%ea%b3%b5%ec%a7%80%eb%8a%a5-%ec%97%90%ec%9d%b4.html
+https://www.itworld.co.kr/article/4070558/%eb%a7%88%ec%9d%b4%ed%81%ac%eb%a1%9c%ec%86%8c%ed%94%84%ed%8a%b8%ea%b0%80-%ec%a7%81%ec%a0%91-%ec%a7%80%eb%aa%a9%ed%95%9c-%ec%9c%88%eb%8f%84%ec%9a%b0-%ec%84%b1%eb%8a%a5-%ec%a0%80%ed%95%98-%ec%9c%a0.html
+https://www.cio.com/article/4070875/gd-y-sus-socios-nexi-y-capgemini-desarrollaran-la-solucion-offline-del-euro-digital.html
+https://www.cio.com/article/4070417/how-ais-hunger-for-data-is-transforming-what-organizations-need-from-storage.html
+https://www.cio.com/article/4070342/real-technology-transformation-starts-with-empowering-people-and-teams.html
+https://www.cio.com/article/4069100/cios-turn-to-ai-to-assist-with-it-purchasing-decisions.html
