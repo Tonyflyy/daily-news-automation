@@ -579,3 +579,13 @@ https://www.itworld.co.kr/article/4072527/%ec%8b%9c%ec%8a%a4%ec%bd%94-2025-%ec%8
 https://www.itworld.co.kr/article/4072502/%ec%9c%88%eb%8f%84%ec%9a%b0-10-%ea%b3%b5%ec%8b%9d-%ec%a7%80%ec%9b%90-%ec%a2%85%eb%a3%8c%ec%9d%b4%ec%a0%9c-%ec%96%b4%eb%96%a4-%ec%84%a0%ed%83%9d%ec%9d%b4-%eb%82%a8%ec%95%98%eb%82%98.html
 https://www.itworld.co.kr/article/4072155/%ec%9c%88%eb%8f%84%ec%9a%b0-10-%ec%82%ac%ec%9a%a9%ec%9e%90%eb%a5%bc-%ec%9c%84%ed%95%9c-%ec%9c%88%eb%8f%84%ec%9a%b0-11-%ec%83%9d%ec%a1%b4-%ea%b0%80%ec%9d%b4%eb%93%9c.html
 https://www.cio.com/article/4073194/cio-think-tank-information-management-in-the-age-of-ai.html
+https://www.itworld.co.kr/article/4073560/%ec%84%9c%ec%9a%b8ai%ec%9e%ac%eb%8b%a8-ibm%ea%b3%bc-%ed%98%91%ec%95%bd-%ec%b2%b4%ea%b2%b0%c2%b7%c2%b7%c2%b7ai-%ed%98%81%ec%8b%a0-%ec%83%9d%ed%83%9c%ea%b3%84-%ec%a1%b0%ec%84%b1-%ec%b6%94%ec%a7%84.html
+https://www.itworld.co.kr/article/4073541/rag-%ed%94%84%eb%a1%9c%ec%a0%9d%ed%8a%b8%eb%a1%9c-%eb%8d%94-%eb%82%98%ec%9d%80-%eb%8d%b0%ec%9d%b4%ed%84%b0-%eb%b6%84%ec%84%9d-%ea%b2%b0%ea%b3%bc%eb%a5%bc-%ec%96%bb%eb%8a%94-%eb%b0%a9%eb%b2%95.html
+https://www.itworld.co.kr/article/4073468/%eb%8d%b0%ec%9d%b4%ed%84%b0-%ec%a0%95%ec%a0%9c%eb%b6%80%ed%84%b0-%eb%b2%84%ec%a0%84-%ea%b4%80%eb%a6%ac%ea%b9%8c%ec%a7%80-%ec%a3%bc%eb%aa%a9-%eb%b0%9b%eb%8a%94-%ed%8c%8c%ec%9d%b4%ec%8d%ac%ec%9a%a9.html
+https://www.itworld.co.kr/article/4073456/rog-%ec%97%91%ec%8a%a4%eb%b0%95%ec%8a%a4-%ec%96%bc%eb%9d%bc%ec%9d%b4-%ed%95%98%eb%93%9c%ec%9b%a8%ec%96%b4%eb%8a%94-%ec%99%84%ec%84%b1%eb%90%90%ec%a7%80%eb%a7%8c-%ec%9c%88%eb%8f%84%ec%9a%b0%eb%8a%94.html
+https://www.itworld.co.kr/article/4073424/%ec%b4%88%ea%b3%a0%ec%84%b1%eb%8a%a5-ai-%ed%83%9c%eb%b8%94%eb%a6%bf%ec%9d%98-%ec%99%84%ec%84%b1-%ec%8b%a0%ed%98%95-m5-%ec%95%84%ec%9d%b4%ed%8c%a8%eb%93%9c-%ed%94%84%eb%a1%9c%ec%9d%98-%eb%aa%a8.html
+https://www.itworld.co.kr/article/4073386/%eb%b6%88%ec%95%88%ed%95%9c-%eb%a6%ac%eb%8d%94%ec%8b%ad%ec%9c%bc%eb%a1%9c-%eb%a7%88%ec%9d%b4%ed%81%ac%eb%a1%9c%ec%86%8c%ed%94%84%ed%8a%b8%ec%9d%98-%eb%af%b8%eb%9e%98%eb%a5%bc.html
+https://www.itworld.co.kr/article/4073393/%ec%95%a0%ed%94%8c-ai-%ec%84%b1%eb%8a%a5-%ea%b0%95%ed%99%94%ed%95%9c-m5-%ec%b9%a9-%eb%b0%9c%ed%91%9c%ec%8b%a0%ec%a0%9c%ed%92%88-3%ec%a2%85-%ec%b6%9c%ec%8b%9c.html
+https://www.itworld.co.kr/article/4073352/%eb%8d%b0%ec%9d%b4%ed%84%b0%ec%9d%b4%ec%bf%a0-%ec%a4%91%ec%95%99-%ec%a7%91%ec%a4%91%ed%98%95-ai-%ec%97%90%ec%9d%b4%ec%a0%84%ed%8a%b8-%ec%9e%91%ec%97%85-%ea%b3%b5%ea%b0%84-%ec%97%90%ec%9d%b4.html
+https://www.cio.com/article/4073969/blackrocks-40b-data-center-deal-opens-a-new-infrastructure-battle-for-cios.html
+https://www.cio.com/article/4072993/an-industrial-approach-to-ai-in-financial-services.html
