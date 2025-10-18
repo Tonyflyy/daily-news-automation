@@ -599,3 +599,13 @@ https://www.itworld.co.kr/article/4074130/m5-%ec%b9%a9%ec%9d%80-%ed%99%95%ec%9e%
 https://www.itworld.co.kr/article/4074121/%ec%96%91%ec%9e%90-%ea%b3%b5%ea%b2%a9%ec%9d%80-%ec%98%88%ea%b3%a0-%ec%97%86%ec%9d%b4-%ec%98%a8%eb%8b%a4%ec%82%ac%ea%b3%a0-%eb%8c%80%ec%9d%91-%ec%95%84%eb%8b%8c-%ec%84%a0%ec%a0%9c-%eb%8c%80.html
 https://www.itworld.co.kr/article/4074112/m5-%ec%95%84%ec%9d%b4%ed%8c%a8%eb%93%9c-%ed%94%84%eb%a1%9c-%eb%a7%a5%eb%b6%81-%ec%97%90%ec%96%b4%eb%b3%b4%eb%8b%a4-%ec%96%87%ea%b3%a0-%ea%b0%95%eb%a0%a5%ed%95%b4.html
 https://www.cio.com/article/4074843/shaping-enterprise-talent-strategies-in-the-age-of-ai.html
+https://www.cio.com/article/4074834/putting-ai-agents-to-work-in-it.html
+https://www.cio.com/article/4074719/will-your-it-infrastructure-cope-with-your-ai-demands.html
+https://www.cio.com/article/4074040/how-cios-can-negotiate-data-ai-and-politics-while-avoiding-snake-oil.html
+https://www.cio.com/article/4074028/the-cio-as-orchestrator-from-running-systems-to-building-ecosystems.html
+https://www.cio.com/article/4073419/ai-pushes-cios-to-redefine-it-roles-for-the-future.html
+https://www.cio.com/article/230640/15-data-science-certifications-that-will-pay-off.html
+https://www.cio.com/article/4074437/como-sera-la-carrera-profesional-en-ti-dentro-de-5-anos-y-como-prosperar-a-pesar-de-los-cambios.html
+https://www.cio.com/article/4074396/uber-lanza-un-programa-piloto-para-que-sus-conductores-entrenen-a-la-ia.html
+https://www.cio.com/article/4074333/%ec%98%a4%eb%9d%bc%ed%81%b4-%ec%a0%9c%ed%83%80%ec%8a%a4%ec%bc%80%ec%9d%bc10%ec%9c%bc%eb%a1%9c-ai-%ec%b4%88%eb%8c%80%ed%98%95-%ec%8a%88%ed%8d%bc%ec%bb%b4%ed%93%a8%ed%8c%85-%ec%8b%9c.html
+https://www.cio.com/article/4074315/%eb%a9%94%ed%83%80-ai-%ec%8b%9c%eb%8c%80%eb%a5%bc-%ec%9c%84%ed%95%9c-%ec%83%88%eb%a1%9c%ec%9a%b4-%eb%84%a4%ed%8a%b8%ec%9b%8c%ed%81%ac-%ea%b8%b0%ec%88%a0-%ec%84%b8%eb%b6%80-%eb%82%b4%ec%9a%a9.html
